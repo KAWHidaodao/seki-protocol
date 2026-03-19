@@ -1368,6 +1368,59 @@ a{color:#60a5fa;text-decoration:none}
     return;
   }
 
+  // ── API: GET /api/jobs/rank — 按完成任务数排行
+  if (req.method === 'GET' && req.url.startsWith('/api/jobs/rank')) {
+    const JOBS_FILE = path.join(BASE, 'agent-jobs.json');
+    let jobs = [];
+    try { jobs = JSON.parse(fs.readFileSync(JOBS_FILE,'utf8')); } catch {}
+    const u = new URL('http://x' + req.url);
+    const limit = Math.min(parseInt(u.searchParams.get('limit')||'20'), 100);
+    // 按 agentType 统计完成数
+    const map = {};
+    for (const j of jobs) {
+      const key = (j.agentType || 'unknown').toLowerCase();
+      if (!map[key]) map[key] = { agentType: key, total: 0, completed: 0, totalBudget: 0 };
+      map[key].total++;
+      if (j.status === 'done' || j.settled) map[key].completed++;
+      map[key].totalBudget += Number(j.budget) || 0;
+    }
+    const rank = Object.values(map).sort((a,b) => b.completed - a.completed).slice(0, limit);
+    res.writeHead(200, { 'Content-Type': 'application/json', ...cors });
+    res.end(JSON.stringify({ ok: true, rank }));
+    return;
+  }
+
+  // ── API: POST /api/jobs/settle — 结算任务
+  if (req.method === 'POST' && req.url === '/api/jobs/settle') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const { jobId, result, txHash } = JSON.parse(body);
+        if (!jobId) throw new Error('missing jobId');
+        const JOBS_FILE = path.join(BASE, 'agent-jobs.json');
+        let jobs = [];
+        try { jobs = JSON.parse(fs.readFileSync(JOBS_FILE,'utf8')); } catch {}
+        let found = false;
+        jobs = jobs.map(j => {
+          if (Number(j.jobId) === Number(jobId)) {
+            found = true;
+            return { ...j, status: 'done', settled: true, result: result||'', settleTx: txHash||'', settledAt: Date.now() };
+          }
+          return j;
+        });
+        if (!found) throw new Error('job not found: ' + jobId);
+        fs.writeFileSync(JOBS_FILE, JSON.stringify(jobs, null, 2));
+        console.log('[jobs/settle] job #'+jobId+' settled');
+        res.writeHead(200, { 'Content-Type': 'application/json', ...cors });
+        res.end(JSON.stringify({ ok: true }));
+      } catch(e) {
+        res.writeHead(400, cors); res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   // ── 静态文件
   let p = req.url === '/' ? '/index.html' : req.url.split('?')[0];
   if (p === '/xlayer' || p === '/xlayer/') p = '/xlayer.html';
