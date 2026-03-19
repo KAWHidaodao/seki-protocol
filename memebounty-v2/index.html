@@ -127,11 +127,7 @@
  </div>
  </div>
 
- <!-- 赞助地址 -->
- <div class="hero-sponsor" style="margin-top:16px">
- <span class="hero-sponsor-label" style="letter-spacing:1px;text-transform:uppercase;font-size:10px">Sponsor</span>
- <span class="hero-sponsor-addr" onclick="navigator.clipboard?.writeText('0xe2e697413a53226d25b70e9592b78229cf856984').then(()=>toast('地址已复制','s'))" title="点击复制">0xe2e6...6984</span>
- </div>
+
  </div>
 
  <!-- 右：市场行情面板 -->
@@ -1426,6 +1422,7 @@ id="page-wendang" class="pw" style="display:none">
     <div style="display:flex;gap:8px;margin-bottom:40px;flex-wrap:wrap">
       <button id="dtag-logic" onclick="docTab('logic',this)" style="padding:8px 20px;border-radius:20px;border:1px solid var(--p);background:rgba(124,58,237,.15);color:var(--p);font-size:13px;font-weight:700;cursor:pointer"> AI 逻辑</button>
       <button id="dtag-dev" onclick="docTab('dev',this)" style="padding:8px 20px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--tx2);font-size:13px;font-weight:700;cursor:pointer"> 开发者</button>
+      <button id="dtag-roadmap" onclick="docTab('roadmap',this)" style="padding:8px 20px;border-radius:20px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--tx2);font-size:13px;font-weight:700;cursor:pointer"> 路线图</button>
     </div>
     <div id="docs-logic">
   <div style="text-align:center;margin-bottom:56px">
@@ -2205,11 +2202,8 @@ id="page-wendang" class="pw" style="display:none">
 
 
 
-</div>
-
-
-<!-- 路线图 section -->
-<div style="max-width:900px;margin:0 auto;padding:60px 20px 40px">
+  <div id="docs-roadmap" style="display:none">
+    <div style="max-width:900px;margin:0 auto;padding:20px 0 40px">
   <div style="text-align:center;margin-bottom:48px">
     <h2 style="font-size:28px;font-weight:900;margin:0 0 12px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">路线图</h2>
     <p style="color:#94a3b8;font-size:14px;margin:0">Seki Protocol · 发展规划</p>
@@ -2305,9 +2299,9 @@ id="page-wendang" class="pw" style="display:none">
     </div>
 
   </div>
-</div>
-<!-- /路线图 section -->
-</div>
+    </div>
+  </div><!-- /docs-roadmap -->
+</div><!-- /page-wendang -->
 
 <div id="page-my" class="pw" style="display:none">
 <div style="max-width:700px;margin:0 auto;padding:80px 20px 60px">

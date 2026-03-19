@@ -628,6 +628,8 @@ function docTab(tab, el) {
  document.getElementById('docs-contract').style.display = tab==='contract' ? '' : 'none';
  const devEl = document.getElementById('docs-dev');
  if(devEl) devEl.style.display = tab==='dev' ? '' : 'none';
+ const rmEl = document.getElementById('docs-roadmap');
+ if(rmEl) rmEl.style.display = tab==='roadmap' ? '' : 'none';
  document.querySelectorAll('[id^="dtag-"]').forEach(function(b){
  b.style.background = 'transparent';
  b.style.color = 'var(--tx2)';
