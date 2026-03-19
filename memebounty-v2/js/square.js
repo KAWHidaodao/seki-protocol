@@ -624,14 +624,14 @@ async function loadOnchainDecisions() {
 }
 
 function docTab(tab, el) {
- document.getElementById('docs-logic').style.display = tab==='logic' ? '' : 'none';
- document.getElementById('docs-contract').style.display = tab==='contract' ? '' : 'none';
- const devEl = document.getElementById('docs-dev');
- if(devEl) devEl.style.display = tab==='dev' ? '' : 'none';
+ ['docs-logic','docs-contract','docs-dev','docs-roadmap'].forEach(function(id){
+   var d = document.getElementById(id);
+   if(d) d.style.display = id === 'docs-'+tab ? '' : 'none';
+ });
  document.querySelectorAll('[id^="dtag-"]').forEach(function(b){
- b.style.background = 'transparent';
- b.style.color = 'var(--tx2)';
- b.style.border = '1px solid rgba(255,255,255,.15)';
+   b.style.background = 'transparent';
+   b.style.color = 'var(--tx2)';
+   b.style.border = '1px solid rgba(255,255,255,.15)';
  });
  if(el){ el.style.background='rgba(124,58,237,.15)'; el.style.color='var(--p)'; el.style.border='1px solid var(--p)'; }
  if(tab==='logic') loadLogicSentiment();
