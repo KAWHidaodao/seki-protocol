@@ -1,0 +1,10 @@
+{
+  "name": "seki-agent",
+  "version": "1.0.0",
+  "main": "loop.js",
+  "dependencies": {
+    "ethers": "^6.0.0",
+    "axios": "^1.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

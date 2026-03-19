@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seki · X Layer — Universal Agent Protocol</title>
+<meta name="description" content="Seki AI Agent on X Layer — Agent订阅市场·链上任务外包·DAO自动执行器">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:rgba(255,255,255,.04);--bg2:rgba(255,255,255,.07);--bg3:rgba(255,255,255,.12);
+ --bd:rgba(255,255,255,.1);--bd2:rgba(255,255,255,.18);
+ --tx:#f0f0f8;--tx2:#a8a8c0;--tx3:#5a5a78;
+ --p:#818cf8;--p2:#4f46e5;--pl:rgba(129,140,248,.12);
+ --gr:#34d399;--re:#f87171;
+ --chain-accent:#f59e0b;
+ --font:-apple-system,BlinkMacSystemFont,"Inter","SF Pro Display",sans-serif;
+}
+/* X Layer 主题 */
+body.world-xlayer{
+ background:#08050f !important;
+ background-image:
+   radial-gradient(ellipse 100% 60% at 50% -10%,rgba(88,28,220,.3) 0%,transparent 65%),
+   radial-gradient(ellipse 60% 40% at 90% 100%,rgba(99,58,237,.15) 0%,transparent 60%) !important;
+}
+body.world-xlayer .nav{
+ background:rgba(6,4,18,.95) !important;
+ border-bottom:1px solid rgba(99,58,237,.35) !important;
+}
+body.world-xlayer .nav-logo-sub{color:#818cf8 !important;}
+body.world-xlayer .nl.on{color:#818cf8;border-bottom-color:#818cf8;}
+body.world-xlayer .hero-btn-primary{
+ background:linear-gradient(135deg,#5b21b6,#4338ca) !important;
+ box-shadow:0 4px 24px rgba(88,28,220,.5) !important;
+}
+body.world-xlayer .hero-panel{
+ border-color:rgba(99,58,237,.3);
+ background:rgba(6,4,18,.7);
+}
+body.world-xlayer .hero-bg-orb.orb1{
+ background:radial-gradient(circle,rgba(88,28,220,.35) 0%,transparent 70%);
+}
+body.world-xlayer .card:hover{
+ border-color:rgba(88,28,220,.5);
+ box-shadow:0 4px 32px rgba(88,28,220,.25);
+}
+body.world-xlayer #chain-switcher{
+ border-color:rgba(99,58,237,.45) !important;
+ background:rgba(88,28,220,.1) !important;
+}
+body.world-xlayer .tc{border-color:rgba(88,28,220,.2);}
+body.world-xlayer .tc:hover{border-color:rgba(88,28,220,.5) !important;box-shadow:0 4px 24px rgba(88,28,220,.2);}
+body.world-xlayer .cbg{background:rgba(88,28,220,.15);color:#818cf8;border-color:rgba(88,28,220,.3);}
+body.world-xlayer .cbg.ag{background:rgba(88,28,220,.2);}
+body.world-xlayer .hero-h1{color:#e0d4ff;}
+body.world-xlayer .pn-btn-main{background:linear-gradient(135deg,#5b21b6,#4338ca) !important;}
+body.world-xlayer .agd-header .ldot{background:#818cf8;}
+body.world-xlayer #wbtn{background:rgba(88,28,220,.25);border-color:rgba(99,58,237,.4);color:#c4b5fd;}
+/* 切链过渡动画 */
+body{transition:background .4s ease;}
+.nav{transition:background .3s ease, border-bottom .3s ease;}
+#hero-line1,#hero-line2,#hero-desc,#hero-tagline{transition:opacity .2s ease;}
+
+html{scroll-behavior:smooth}
+body{
+ background:#06040f;
+ background-image:radial-gradient(ellipse 80% 50% at 20% 0%,rgba(79,70,229,.2) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(59,130,246,.12) 0%,transparent 60%);
+ color:var(--tx);font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh
+}
+.display{font-size:clamp(48px,7vw,88px);font-weight:900;letter-spacing:-3px;line-height:.92}
+.headline{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-2px;line-height:.95}
+.label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--p)}
+.accent{color:var(--p)}
+.pw,.page{}.pw.on,.page.on{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,20,.85);backdrop-filter:blur(24px) saturate(200%);border-bottom:1px solid rgba(79,70,229,.15);height:64px;display:flex;align-items:center}
+.nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.4),rgba(96,165,250,.3),transparent);pointer-events:none}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;align-items:center;width:100%}
+.nav-logo{display:flex;align-items:center;gap:10px;margin-right:36px;flex-shrink:0;cursor:pointer;border:none;background:transparent;font-family:var(--font);padding:0;position:relative}
+.nav-logo-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(129,140,248,.5);box-shadow:0 0 14px rgba(79,70,229,.5),0 0 28px rgba(79,70,229,.2);transition:all .3s;flex-shrink:0}
+.nav-logo:hover .nav-logo-avatar{box-shadow:0 0 20px rgba(79,70,229,.8),0 0 40px rgba(79,70,229,.3);border-color:rgba(129,140,248,.9)}
+.nav-logo-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1}
+.nav-logo-name{font-size:16px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(135deg,#e2d9f3,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-logo-sub{font-size:10px;font-weight:500;color:rgba(129,140,248,.6);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;flex:1;overflow-x:auto}
+.nl{padding:0 14px;height:64px;font-size:13px;font-weight:500;color:var(--tx2);background:transparent;border:none;cursor:pointer;font-family:var(--font);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nl:hover{color:var(--tx)}.nl.on{color:var(--p);font-weight:700;border-bottom-color:var(--p)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-wallet{padding:8px 16px;font-size:13px;font-weight:600;background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:var(--font);box-shadow:0 2px 12px rgba(79,70,229,.4)}
+.nav-wallet:hover{opacity:.9}.nav-wallet.connected{background:linear-gradient(135deg,#059669,#047857)}
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-size:14px;font-weight:700;background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 4px 16px rgba(79,70,229,.4)}
+.btn-primary:hover{background:linear-gradient(135deg,#8b5cf6,#4f46e5);transform:translateY(-2px);box-shadow:0 6px 24px rgba(79,70,229,.55)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;font-size:14px;font-weight:700;background:rgba(255,255,255,.05);color:var(--tx);border:1px solid rgba(255,255,255,.18);border-radius:10px;cursor:pointer;font-family:var(--font);transition:all .2s;backdrop-filter:blur(8px)}
+.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:var(--p);transform:translateY(-1px)}
+.btnp{background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:var(--font);font-size:14px;font-weight:700;padding:11px 20px;transition:all .2s;box-shadow:0 4px 16px rgba(79,70,229,.35)}
+.btnp:hover{background:var(--p2)}
+.btns{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;padding:10px 18px;transition:all .2s;backdrop-filter:blur(8px)}
+.btns:hover{border-color:var(--p);background:rgba(255,255,255,.09)}.cb{
+ width:100%;padding:11px;
+ background:rgba(79,70,229,.1);
+ border:1px solid rgba(79,70,229,.25);
+ border-radius:12px;
+ color:var(--p);
+ font-size:13px;font-weight:700;
+ cursor:pointer;font-family:var(--font);
+ transition:all .2s;letter-spacing:.3px;
+}
+.cb:hover:not(:disabled){background:rgba(79,70,229,.2);border-color:rgba(79,70,229,.5);color:#c4b5fd}
+.cb:disabled{opacity:.35;cursor:default}
+.cb.dn{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.2);color:var(--gr)}
+/* CARDS */
+.card{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px;transition:all .2s}
+.card:hover{border-color:var(--p);box-shadow:0 4px 32px rgba(79,70,229,.2);transform:translateY(-2px)}
+.card-flat{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px}
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fl{font-size:12px;font-weight:600;color:var(--tx2);letter-spacing:.3px}
+.fi{padding:11px 14px;font-size:14px;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:var(--font);outline:none;transition:all .2s;width:100%}
+.fi:focus{border-color:var(--p);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(129,140,248,.15)}
+textarea.fi{resize:vertical}
+.fs{padding:11px 14px;font-size:14px;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:var(--font);outline:none;width:100%;cursor:pointer}
+.fs:focus{border-color:var(--p)}.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.df{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px}
+/* TASK CARDS */
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.tc{
+ background:rgba(12,12,28,.6);
+ backdrop-filter:blur(16px);
+ border:1px solid rgba(255,255,255,.07);
+ border-radius:20px;
+ padding:24px;
+ cursor:pointer;
+ transition:all .25s cubic-bezier(.4,0,.2,1);
+ position:relative;
+ overflow:hidden;
+}
+.tc::before{
+ content:'';position:absolute;inset:0;
+ background:radial-gradient(ellipse at top left,rgba(79,70,229,.08) 0%,transparent 60%);
+ pointer-events:none;opacity:0;transition:opacity .3s;
+}
+.tc:hover{border-color:rgba(79,70,229,.35);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4),0 0 0 1px rgba(79,70,229,.15)}
+.tc:hover::before{opacity:1}
+.tc.full{opacity:.55;filter:saturate(.6)}
+.tch{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cti{font-size:15px;font-weight:800;color:var(--tx);margin-bottom:6px;line-height:1.35;letter-spacing:-.3px}
+.ctk{font-size:10px;color:var(--tx3);font-family:monospace;margin-bottom:12px;opacity:.7}
+.cde{font-size:12px;color:var(--tx3);line-height:1.6;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.crw{font-size:26px;font-weight:900;background:linear-gradient(135deg,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px;line-height:1}
+.crl{font-size:11px;color:var(--tx3);margin-top:3px;margin-bottom:16px}
+.cpb{height:2px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:8px}
+.cbr{height:2px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:8px;overflow:hidden}
+.cbf{height:100%;background:linear-gradient(90deg,#4f46e5,#3b82f6);border-radius:2px;transition:width .6s}
+.cft{display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-bottom:16px}
+.cbg{font-size:10px;font-weight:700;letter-spacing:.5px;padding:4px 10px;border-radius:8px;background:rgba(79,70,229,.12);color:var(--p);border:1px solid rgba(79,70,229,.2)}
+.cbg.ag{background:rgba(96,165,250,.1);color:#60a5fa;border-color:rgba(96,165,250,.2)}
+.cs{font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px;letter-spacing:.3px}
+.cs.go{background:rgba(5,150,105,.12);color:var(--gr);border:1px solid rgba(5,150,105,.2)}
+.cs.no{background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.15)}
+
+.cb{
+ width:100%;padding:11px;
+ background:rgba(79,70,229,.1);
+ border:1px solid rgba(79,70,229,.25);
+ border-radius:12px;
+ color:var(--p);
+ font-size:13px;font-weight:700;
+ cursor:pointer;font-family:var(--font);
+ transition:all .2s;letter-spacing:.3px;
+}
+.cb:hover:not(:disabled){background:rgba(79,70,229,.2);border-color:rgba(79,70,229,.5);color:#c4b5fd}
+.cb:disabled{opacity:.35;cursor:default}
+.cb.dn{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.2);color:var(--gr)}
+/* CARDS */
+.card{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px;transition:all .2s}
+.card:hover{border-color:var(--p);box-shadow:0 4px 32px rgba(79,70,229,.2);transform:translateY(-2px)}
+.card-flat{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px}
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fl{font-size:12px;font-weight:600;color:var(--tx2);letter-spacing:.3px}
+.fi{padding:11px 14px;font-size:14px;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:var(--font);outline:none;transition:all .2s;width:100%}
+.fi:focus{border-color:var(--p);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(129,140,248,.15)}
+textarea.fi{resize:vertical}
+.fs{padding:11px 14px;font-size:14px;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:var(--font);outline:none;width:100%;cursor:pointer}
+.fs:focus{border-color:var(--p)}.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.df{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px}
+/* TASK CARDS */
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.tc{background:rgba(255,255,255,.04);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.tc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.tc.t0::before{background:#8b5cf6}.tc.t1::before{background:#3b82f6}
+.tc.t2::before{background:#f59e0b}.tc.t3::before{background:#10b981}.tc.t4::before{background:#ef4444}
+.tc:hover{border-color:var(--p);box-shadow:0 4px 32px rgba(79,70,229,.25);transform:translateY(-2px)}
+.tc.done{opacity:.5}
+.tch{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cti{font-size:16px;font-weight:800;color:var(--tx);margin-bottom:4px;line-height:1.3}
+.ctk{font-size:11px;color:var(--tx3);font-family:monospace;margin-bottom:8px}
+.cde{font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:12px}
+.crw{font-size:24px;font-weight:900;color:var(--p);letter-spacing:-1px}
+.crl{font-size:12px;color:var(--tx3);margin-top:2px;margin-bottom:12px}
+.cpb{height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
+.cpb-fill{height:100%;background:var(--p);border-radius:2px}
+.cpb-txt{display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-top:4px}
+.cbg{font-size:10px;font-weight:700;letter-spacing:.5px;padding:3px 8px;border-radius:6px;background:var(--pl);color:var(--p);border:1px solid #ddd6fe}
+.cbg.ag{background:var(--tx);color:#fff;border-color:var(--tx)}
+.cs{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
+.cs.go{background:#f0fdf4;color:var(--gr)}.cs.no{background:var(--bg2);color:var(--tx3)}
+.dn{opacity:.5}
+.empty{text-align:center;padding:48px 20px;color:var(--tx3);font-size:14px;border:1px dashed rgba(255,255,255,.1);border-radius:12px}
+.ft-wrap{display:flex;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:28px;overflow-x:auto}
+.ft{padding:10px 18px;font-size:13px;font-weight:500;color:var(--tx3);background:transparent;border:none;cursor:pointer;font-family:var(--font);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s}
+.ft:hover{color:var(--tx)}.ft.on{color:var(--p);font-weight:700;border-bottom-color:var(--p)}
+/* PANEL */
+.pw2{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.pw2.on{display:flex}
+.pn{background:rgba(8,7,20,.97);backdrop-filter:blur(32px);width:520px;max-height:88vh;overflow-y:auto;border:1px solid rgba(79,70,229,.2);border-radius:24px;box-shadow:0 0 80px rgba(79,70,229,.2),0 24px 60px rgba(0,0,0,.8);display:flex;flex-direction:column;position:relative}
+.pn::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,transparent 0%,rgba(79,70,229,.8) 30%,rgba(96,165,250,.5) 70%,transparent 100%)}
+
+/* 头部 */
+.pn-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;flex-shrink:0}
+.pc{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--tx3);width:36px;height:36px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pc:hover{border-color:rgba(255,255,255,.3);color:var(--tx)}
+.pn-header-center{flex:1;text-align:center}
+.pn-tag{display:inline-block;padding:4px 12px;background:rgba(79,70,229,.12);border:1px solid rgba(79,70,229,.2);border-radius:20px;font-size:11px;font-weight:700;color:var(--p);letter-spacing:.5px}
+.pn-header-right{width:36px;text-align:right}
+.pn-id{font-size:12px;color:var(--tx3);font-family:monospace}
+
+/* 奖励英雄区 */
+.pn-reward-hero{padding:28px 24px 24px;text-align:center;position:relative;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0}
+.pn-reward-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(79,70,229,.12) 0%,transparent 70%);pointer-events:none}
+.pn-reward-val{font-size:48px;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#e9d5ff,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px}
+.pn-reward-sub{font-size:11px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.pn-reward-progress{height:2px;background:rgba(255,255,255,.06);border-radius:2px;margin:0 auto 10px;max-width:200px}
+.pn-reward-bar{height:100%;background:linear-gradient(90deg,#4f46e5,#3b82f6);border-radius:2px;transition:width .6s}
+.pn-reward-stat{font-size:12px;color:var(--tx3)}
+
+/* 面板内容区 */
+#pbody{padding:20px 24px 32px;flex:1}
+
+/* 参与步骤 */
+.pn-steps{margin-bottom:20px}
+.pn-step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pn-step:last-child{border-bottom:none}
+.pn-step-num{width:22px;height:22px;border-radius:50%;background:rgba(79,70,229,.15);border:1px solid rgba(79,70,229,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--p);flex-shrink:0;margin-top:1px}
+.pn-step-txt{font-size:13px;color:var(--tx2);line-height:1.5}
+
+/* 门槛卡片 */
+.pn-thresholds{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.pn-th{padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px}
+.pn-th-ico{font-size:20px;margin-bottom:6px}
+.pn-th-key{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
+.pn-th-val{font-size:12px;color:var(--tx);line-height:1.4}
+
+/* meta 行 */
+.pr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pr:last-of-type{border-bottom:none}
+.pk{font-size:12px;color:var(--tx3)}
+.pv{font-size:13px;font-weight:600;color:var(--tx)}
+
+/* 动作按钮区 */
+.pn-action{margin-top:20px}
+.pn-btn-main{width:100%;padding:14px;background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s;box-shadow:0 4px 20px rgba(79,70,229,.3)}
+.pn-btn-main:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(79,70,229,.4)}
+.pn-btn-cancel{width:100%;padding:11px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);border-radius:12px;color:#f87171;font-size:13px;cursor:pointer;font-family:var(--font);margin-top:10px;transition:all .2s}
+.pn-btn-cancel:hover{background:rgba(239,68,68,.12)}
+.pn-timer{padding:14px;background:rgba(79,70,229,.08);border:1px solid rgba(79,70,229,.18);border-radius:12px;text-align:center;margin-top:16px}
+.pn-timer-val{font-size:28px;font-weight:900;color:var(--p);letter-spacing:-1px}
+.pn-success{text-align:center;padding:14px;color:var(--gr);font-weight:700;font-size:14px}
+.pc{background:transparent;border:none;font-size:13px;color:var(--tx3);cursor:pointer;font-family:var(--font);margin-bottom:24px;padding:0}
+.pc:hover{color:var(--tx)}.pn h3{font-size:20px;font-weight:800;margin-bottom:20px;letter-spacing:-.5px}
+.pr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.pk{font-size:12px;color:var(--tx3)}.pv{font-size:13px;font-weight:600}
+/* TOAST */
+.tw{position:fixed;bottom:28px;right:28px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 18px;background:rgba(18,15,38,.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.5);display:flex;align-items:center;gap:8px;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.sb{background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.25);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--p);margin-bottom:16px}
+.ldot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;animation:pulse 1.5s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 6px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.ai-step{margin-bottom:24px}
+.ai-loading{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px;color:var(--tx2);font-size:14px}
+.ai-spinner{width:32px;height:32px;border:3px solid var(--bd);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-preview{background:rgba(255,255,255,.05);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px}
+.ai-preview-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ai-type-badge{padding:4px 10px;background:var(--pl);color:var(--p);border-radius:6px;font-size:11px;font-weight:700}
+.ai-reasoning{font-size:12px;color:var(--tx3)}
+.ai-preview-title{font-size:16px;font-weight:800;margin-bottom:6px}
+.ai-preview-desc{font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:12px}
+.ai-params{display:flex;flex-wrap:wrap;gap:6px}
+.ai-param{font-size:11px;padding:4px 10px;background:var(--bg);border:1px solid var(--bd);border-radius:6px;color:var(--tx2)}
+.ai-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ai-ex-label{font-size:11px;color:var(--tx3);width:100%;margin-bottom:2px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.ai-ex{padding:7px 12px;font-size:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;cursor:pointer;font-family:var(--font);color:var(--tx2);transition:all .2s}
+.ai-ex:hover{border-color:var(--p);color:var(--p);background:rgba(129,140,248,.1)}
+.dlg-tabs-wrap{padding:0;margin:0 0 32px}
+.dlg-tabs{display:flex;border-bottom:1px solid var(--bd)}
+.dlg-tab{padding:12px 20px;font-size:14px;font-weight:500;color:var(--tx2);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:var(--font);transition:all .2s}
+.dlg-tab:hover{color:var(--tx)}.dlg-tab.on{color:var(--p);font-weight:700;border-bottom-color:var(--p)}
+.dlg-cap-item{display:flex;align-items:flex-start;gap:16px;padding:16px;background:rgba(255,255,255,.03);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:12px;transition:all .2s}
+.dlg-cap-item:hover{border-color:var(--p);background:rgba(129,140,248,.08)}
+.dlg-cap-n{font-size:28px;font-weight:900;color:var(--p);letter-spacing:-1px;line-height:1;min-width:36px}
+.dlg-cap-t{font-size:13px;font-weight:700;margin-bottom:3px}.dlg-cap-d{font-size:12px;color:var(--tx2);line-height:1.5}
+.lh-upload{border:2px dashed rgba(255,255,255,.15);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.04);min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.lh-upload:hover{border-color:var(--p);background:rgba(129,140,248,.08)}.lh-upload.has-img{border-style:solid;border-color:var(--p)}
+#lh-upload-icon{font-size:20px}#lh-upload-tip{font-size:12px;color:var(--tx3);line-height:1.4}
+.lh-preview-wrap{margin-bottom:20px;display:flex;justify-content:center}
+.lh-preview{background:rgba(129,140,248,.08);backdrop-filter:blur(8px);border:1px solid rgba(129,140,248,.2);border-radius:16px;padding:20px 28px;text-align:center;min-width:180px}
+.lh-preview-img{width:56px;height:56px;border-radius:50%;background:var(--bd2);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:24px;background-size:cover;background-position:center}
+.lh-preview-name{font-size:15px;font-weight:800}.lh-preview-sym{font-size:12px;color:var(--p);font-weight:700;margin-top:2px}
+.lh-tax-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+.lh-tax-opt{display:flex;align-items:center;justify-content:center;padding:9px 4px;border:1px solid rgba(255,255,255,.12);border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;color:var(--tx2);transition:all .2s}
+.lh-tax-opt input{display:none}.lh-tax-opt:has(input:checked){border-color:var(--p);background:rgba(129,140,248,.15);color:var(--p)}
+.lh-tax-rec{position:relative}.lh-tax-rec::after{content:'推荐';position:absolute;top:-7px;right:-4px;background:var(--tx);color:#fff;font-size:9px;padding:1px 4px;border-radius:4px}
+.lh-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.lh-type-opt{cursor:pointer;border:1px solid rgba(255,255,255,.1);border-radius:12px;transition:all .2s}
+.lh-type-opt input{display:none}.lh-type-opt:has(input:checked){border-color:var(--p);background:rgba(129,140,248,.1)}
+.lh-type-body{padding:14px;text-align:center}.lh-type-ico{font-size:22px;margin-bottom:4px}
+.lh-type-name{font-size:13px;font-weight:700}.lh-type-desc{font-size:11px;color:var(--tx3);margin-top:2px}
+.lh-budget-tip{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--gr);margin-top:12px}
+.lh-progress{position:fixed;inset:0;background:rgba(10,8,20,.85);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;z-index:200}
+.lh-progress-inner{text-align:center;display:flex;flex-direction:column;align-items:center;padding:40px}
+.lh-result{position:fixed;inset:0;background:rgba(10,8,20,.9);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;z-index:200}
+.lh-result-inner{text-align:center;max-width:480px;padding:40px;background:rgba(18,14,38,.96);backdrop-filter:blur(24px);border:1px solid rgba(129,140,248,.2);border-radius:24px;box-shadow:0 8px 48px rgba(79,70,229,.35)}
+.lh-result-title{font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+.lh-result-addr{font-family:monospace;font-size:12px;color:var(--p);background:var(--pl);padding:8px 12px;border-radius:8px;word-break:break-all}
+.dash-log-panel{background:rgba(255,255,255,.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
+.dash-log-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07)}
+.dash-log-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.dash-log-count{font-size:12px;color:var(--tx3)}
+.dash-log-body{min-height:280px;max-height:520px;overflow-y:auto}
+.dash-log-body .le{border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+.dash-log-body .le:hover{background:rgba(255,255,255,.04)}.dash-log-body .le:last-child{border-bottom:none}
+.erc-states{display:flex;align-items:center;flex-wrap:wrap;margin:32px 0}
+.erc-state{text-align:center;flex:1;min-width:100px}.erc-s-dot{width:16px;height:16px;border-radius:50%;margin:0 auto 8px}
+.erc-s-name{font-size:13px;font-weight:800;margin-bottom:4px}.erc-s-desc{font-size:11px;color:var(--tx3);line-height:1.4}
+.s-open .erc-s-dot{background:#94a3b8}.s-funded .erc-s-dot{background:#3b82f6}
+.s-submitted .erc-s-dot{background:#f59e0b}.s-completed .erc-s-dot{background:var(--gr)}
+.erc-arrow{font-size:18px;color:rgba(129,140,248,.35);padding:0 4px;flex-shrink:0}
+.erc-exits{display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.erc-exit{flex:1;min-width:240px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:12px;color:var(--tx2);line-height:1.5}
+.erc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+.erc-card{background:rgba(255,255,255,.04);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px}
+.erc-card-ico{font-size:24px;margin-bottom:10px}.erc-card-title{font-size:14px;font-weight:800;margin-bottom:6px}
+.erc-card-desc{font-size:12px;color:var(--tx2);line-height:1.6}
+.erc-contracts{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px}
+.erc-ct-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px}
+.erc-ct-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.erc-ct-row:last-child{border-bottom:none}
+.erc-ct-name{font-size:12px;font-weight:700;min-width:180px}
+.erc-ct-addr{font-family:monospace;font-size:11px;color:var(--tx3);flex:1;overflow:hidden;text-overflow:ellipsis}
+.erc-ct-link{font-size:11px;font-weight:700;color:var(--p);text-decoration:none;white-space:nowrap}
+.erc-ct-link:hover{text-decoration:underline}
+.hs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:32px 0}
+.hs-item{padding:20px;background:rgba(255,255,255,.03);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:14px}
+.hs-num{font-size:36px;font-weight:900;color:var(--bd2);letter-spacing:-2px;margin-bottom:8px}
+.hs-title{font-size:14px;font-weight:800;margin-bottom:6px}.hs-desc{font-size:12px;color:var(--tx2);line-height:1.6}
+.hs-modes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
+.hs-mode{padding:24px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px}
+.hs-mode-title{font-size:15px;font-weight:800;margin-bottom:8px}.hs-mode-desc{font-size:12px;color:var(--tx2);line-height:1.6}
+.dc{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}
+.dcard{padding:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;text-align:center}
+.dci{font-size:28px;margin-bottom:10px}.dcard h3{font-size:14px;font-weight:700;margin-bottom:6px}
+.dcard p{font-size:12px;color:var(--tx2);line-height:1.5}
+.ms{margin-bottom:32px}
+.mst{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--p);margin-bottom:16px}
+.dh{max-width:680px;margin:0 auto;padding:80px 28px 40px;text-align:center}
+.dh h2{font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-1.5px;margin-bottom:12px}
+.dh p{font-size:15px;color:var(--tx2)}
+.gd{color:var(--p)}
+.how-stat{max-width:900px;margin:0 auto;padding:0 28px}
+@media(max-width:768px){
+ .grid2,.grid3,.erc-cards,.hs-grid,.hs-modes,.fr2,.dc{grid-template-columns:1fr}
+ .display{font-size:48px;letter-spacing:-2px}.headline{font-size:32px}
+ .pn{width:100vw}
+ #page-home > div:first-child{grid-template-columns:1fr}
+ #page-launch > div:first-child{grid-template-columns:1fr}
+ .dlg-cap-item:nth-child(n+3){display:none}
+}
+
+.agent-card{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.09);border-radius:20px;padding:24px;cursor:pointer;transition:all .25s;position:relative}
+.agent-card:hover{border-color:rgba(255,255,255,.2);transform:translateY(-3px);box-shadow:0 8px 40px rgba(0,0,0,.25)}
+.agent-card.selected{border-color:var(--p);box-shadow:0 0 0 1px var(--p),0 8px 40px rgba(79,70,229,.25)}
+.ac-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.ac-avatar{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.ac-name{font-size:16px;font-weight:900;letter-spacing:-.3px;margin-bottom:4px}
+.ac-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;padding:2px 8px;border-radius:6px;border:1px solid}
+.ac-desc{font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:14px}
+.ac-traits{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.ac-trait{font-size:11px;padding:3px 9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;color:var(--tx2)}
+.ac-preview-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--p);margin-bottom:10px}
+.ac-samples{display:flex;flex-direction:column;gap:8px}
+.ac-sample{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px}
+.ac-s-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ac-s-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px}
+.ac-s-time{font-size:10px;color:var(--tx3)}
+.ac-s-title{font-size:13px;font-weight:800;margin-bottom:4px;line-height:1.4}
+.ac-s-body{font-size:11px;color:var(--tx3);line-height:1.5;margin-bottom:6px;font-style:italic}
+.ac-s-reward{font-size:12px;font-weight:700;color:var(--p)}
+.ac-select-btn{margin-top:16px;width:100%;padding:10px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font-size:13px;font-weight:700;color:var(--tx2);transition:all .2s}
+.agent-card:hover .ac-select-btn{background:rgba(129,140,248,.12);border-color:var(--p);color:var(--p)}
+.agent-card.selected .ac-select-btn{background:linear-gradient(135deg,#4f46e5,#3730a3);border-color:transparent;color:#fff}
+
+
+/* ── 任务大厅 v2 全宽列表 ── */
+.hall2-wrap{border-top:1px solid rgba(255,255,255,.06);max-width:1100px;margin:0 auto;padding:0 28px 100px}
+.hall2-bar{display:flex;align-items:center;gap:16px;padding:32px 0 24px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:0}
+.hall2-bar-left{display:flex;align-items:center;gap:16px;flex:1;min-width:0}
+.hall2-live{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:2px;color:rgba(79,70,229,.8);flex-shrink:0}
+.hall2-dot{width:6px;height:6px;border-radius:50%;background:#4f46e5;box-shadow:0 0 8px rgba(79,70,229,.9);animation:pulse 2s infinite;flex-shrink:0}
+.hall2-title{font-size:22px;font-weight:900;letter-spacing:-1px;color:var(--tx);white-space:nowrap}
+.hall2-filters{display:flex;gap:4px;flex-wrap:wrap}
+.hf2{padding:6px 14px;background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:20px;color:var(--tx3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .18s}
+.hf2:hover{color:var(--tx);border-color:rgba(255,255,255,.2)}
+.hf2.on{color:#c4b5fd;background:rgba(79,70,229,.1);border-color:rgba(79,70,229,.3)}
+.hall2-bar-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.hall2-count{font-size:11px;color:var(--tx3)}
+.hall2-post{padding:7px 16px;background:rgba(79,70,229,.12);border:1px solid rgba(79,70,229,.25);border-radius:20px;color:var(--p);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s}
+.hall2-post:hover{background:rgba(79,70,229,.2)}
+.hall2-list{display:flex;flex-direction:column}
+.tc{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.05);border-radius:0;padding:24px 0;cursor:pointer;transition:background .15s;position:relative;display:grid;grid-template-columns:36px 1fr auto;gap:20px;align-items:center}
+.tc::after{content:'';position:absolute;left:-28px;right:-28px;top:0;bottom:0;background:rgba(79,70,229,.03);border-left:2px solid rgba(79,70,229,.4);opacity:0;transition:opacity .15s;pointer-events:none}
+.tc:hover::after{opacity:1}
+.tc:hover .tc-num{color:#c4b5fd}
+.tc.full{opacity:.35}
+.tc-num{font-size:11px;font-weight:800;color:rgba(255,255,255,.12);font-family:monospace;text-align:right;transition:color .15s;flex-shrink:0}
+.tc-body{min-width:0}
+.tch{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.cti{font-size:15px;font-weight:800;color:var(--tx);letter-spacing:-.4px;line-height:1.3}
+.ctk{display:none}.cde{font-size:12px;color:var(--tx3);margin-top:4px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}.crl{display:none}.cbr{display:none}.cft{display:none}
+.tc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;min-width:90px}
+.crw{font-size:17px;font-weight:900;background:linear-gradient(135deg,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+.tc-remain{font-size:10px;color:var(--tx3)}.tc-dl{font-size:10px;color:var(--tx3)}
+.cbg{font-size:10px;font-weight:700;letter-spacing:.3px;padding:3px 8px;border-radius:6px;background:rgba(79,70,229,.1);color:rgba(129,140,248,.8);border:1px solid rgba(79,70,229,.12)}
+.cbg.ag{background:rgba(96,165,250,.08);color:rgba(96,165,250,.8);border-color:rgba(96,165,250,.12)}
+.cs{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px}
+.cs.go{background:rgba(5,150,105,.1);color:#34d399;border:1px solid rgba(5,150,105,.12)}
+.cs.no{background:rgba(239,68,68,.06);color:#f87171;border:1px solid rgba(239,68,68,.1)}
+.cb{display:none}
+@media(max-width:768px){.hall-wrap{grid-template-columns:1fr}.hall-sidebar{display:none}.hall-feed{padding:20px 20px 80px}.tc{grid-template-columns:1fr auto}.tc-num{display:none}}
+
+
+/* ── Hero ── */
+.hero-root{position:relative;min-height:calc(100vh - 64px);display:flex;align-items:center;overflow:hidden;padding:0 28px}
+.hero-bg-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,rgba(79,70,229,.18) 0%,transparent 70%);top:-100px;left:-100px}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(59,130,246,.12) 0%,transparent 70%);bottom:-80px;right:-80px}
+.hero-bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 400px;gap:80px;align-items:center;padding:80px 0}
+
+/* 左侧 */
+.hero-left{display:flex;flex-direction:column;gap:0}
+.hero-badge{display:inline-flex;align-items:center;gap:12px;margin-bottom:36px;padding:8px 16px 8px 8px;background:rgba(79,70,229,.07);border:1px solid rgba(79,70,229,.18);border-radius:100px;width:fit-content}
+.hero-badge-avatar{position:relative;width:36px;height:36px;flex-shrink:0}
+.hero-badge-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:1.5px solid rgba(129,140,248,.4)}
+.hero-badge-dot{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid var(--bg);box-shadow:0 0 6px rgba(34,197,94,.6)}
+.hero-badge-text{display:flex;flex-direction:column;line-height:1.2}
+.hero-badge-name{font-size:13px;font-weight:800;color:var(--tx)}
+.hero-badge-role{font-size:10px;color:var(--tx3);letter-spacing:.5px}
+.hero-h1{margin:0 0 24px;line-height:1.05;letter-spacing:-3px}
+.hero-h1-line1{display:block;font-size:clamp(52px,7vw,88px);font-weight:900;color:var(--tx)}
+.hero-h1-line2{display:block;font-size:clamp(52px,7vw,88px);font-weight:900;color:var(--tx)}
+.hero-h1-line2 em{font-style:normal;background:linear-gradient(135deg,#818cf8 0%,#60a5fa 50%,#818cf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:shimmer 4s linear infinite}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.hero-sub{font-size:15px;color:var(--tx3);line-height:1.8;margin:0 0 40px;max-width:400px}
+.hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hero-btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);box-shadow:0 4px 24px rgba(79,70,229,.4);transition:all .2s}
+.hero-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(79,70,229,.5)}
+.hero-btn-secondary{padding:14px 24px;background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--tx2);border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s}
+.hero-btn-secondary:hover{border-color:rgba(255,255,255,.3);color:var(--tx)}
+
+/* 右侧面板 */
+.hero-right{display:flex;justify-content:center}
+.hero-panel{background:rgba(12,12,28,.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:32px;display:flex;flex-direction:column;align-items:center;gap:24px;position:relative;overflow:hidden;width:100%;max-width:340px}
+.hero-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.6),rgba(96,165,250,.4),transparent)}
+.hero-panel-avatar{position:relative;width:120px;height:120px}
+.hero-panel-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:2px solid rgba(129,140,248,.3);box-shadow:0 0 40px rgba(79,70,229,.3)}
+.hero-panel-halo{position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(from 0deg,rgba(79,70,229,.4),rgba(96,165,250,.2),rgba(79,70,229,.4));animation:spin 6s linear infinite;z-index:-1;filter:blur(4px)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-panel-stats{display:flex;align-items:center;gap:0;width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+.hero-stat{flex:1;padding:14px 12px;text-align:center}
+.hero-stat-div{width:1px;height:40px;background:rgba(255,255,255,.07)}
+.hero-stat-val{font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--tx);line-height:1}
+.hero-stat-key{font-size:10px;color:var(--tx3);margin-top:4px;letter-spacing:.5px}
+.hero-panel-footer{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.hero-panel-tag{padding:4px 10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:.5px}
+
+@media(max-width:768px){
+ .hero-inner{grid-template-columns:1fr;gap:40px;padding:60px 0 40px}
+ .hero-right{display:none}
+ .hero-h1-line1,.hero-h1-line2{font-size:52px}
+}
+
+
+/* ── Agent 日志页 ── */
+.agd-wrap{max-width:1100px;margin:0 auto;padding:32px 28px 80px}
+.agd-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:40px;flex-wrap:wrap}
+.agd-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--p);margin-bottom:10px}
+.agd-title{font-size:36px;font-weight:900;letter-spacing:-1.5px;color:var(--tx);margin-bottom:8px}
+.agd-accent{background:linear-gradient(135deg,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.agd-sub{font-size:13px;color:var(--tx3);line-height:1.6;max-width:500px}
+.agd-status{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:20px;font-size:12px;font-weight:700;color:var(--gr);flex-shrink:0;height:fit-content}
+
+/* 指标 */
+.agd-metrics{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:12px;margin-bottom:32px}
+.agd-metric{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px 20px 18px;position:relative;overflow:hidden}
+.agd-metric-main{background:rgba(79,70,229,.06);border-color:rgba(79,70,229,.2)}
+.agd-metric-main::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(79,70,229,.15) 0%,transparent 60%);pointer-events:none}
+.agd-metric-icon{font-size:20px;margin-bottom:10px}
+.agd-metric-val{font-size:26px;font-weight:900;letter-spacing:-1px;color:var(--tx);line-height:1;margin-bottom:4px}
+.agd-metric-main .agd-metric-val{background:linear-gradient(135deg,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:28px}
+.agd-metric-key{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tx3)}
+.agd-metric-sub{font-size:10px;color:var(--tx3);margin-top:2px;opacity:.7}
+
+/* 税金流转 */
+.agd-flow{display:flex;align-items:center;gap:0;margin-bottom:32px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px 24px;overflow-x:auto}
+.agd-flow-node{flex:1;min-width:100px;text-align:center;padding:0 8px}
+.agd-flow-active{position:relative}
+.agd-flow-active::before{content:'';position:absolute;inset:-4px;border-radius:12px;border:1px solid rgba(79,70,229,.3);background:rgba(79,70,229,.05)}
+.agd-flow-ico{font-size:24px;margin-bottom:6px}
+.agd-flow-name{font-size:12px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.agd-flow-desc{font-size:10px;color:var(--tx3)}
+.agd-flow-arrow{font-size:18px;color:rgba(79,70,229,.4);padding:0 4px;flex-shrink:0;padding-bottom:16px}
+
+/* 日志面板 */
+.agd-log{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden}
+.agd-log-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.agd-log-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tx)}
+.agd-log-count{font-size:11px;color:var(--tx3)}
+.agd-log-body{max-height:400px;overflow-y:auto}
+.agd-log-empty{padding:48px;text-align:center;color:var(--tx3);font-size:13px}
+
+@media(max-width:768px){
+ .agd-metrics{grid-template-columns:1fr 1fr}
+ .agd-metric-main{grid-column:1/-1}
+ .agd-flow{flex-wrap:wrap;justify-content:center}
+ .agd-flow-arrow{transform:rotate(90deg)}
+}
+
+
+/* ── 策略描述框 ── */
+.strat-box{background:rgba(79,70,229,.05);border:1px solid rgba(79,70,229,.2);border-radius:16px;padding:20px;margin-bottom:28px;position:relative;overflow:hidden}
+.strat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,70,229,.5),transparent)}
+.strat-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.strat-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.strat-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:3px}
+.strat-sub{font-size:12px;color:var(--tx3)}
+.strat-input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;color:var(--tx);font-size:13px;line-height:1.6;font-family:var(--font);resize:none;box-sizing:border-box;transition:border-color .2s}
+.strat-input:focus{outline:none;border-color:rgba(79,70,229,.4)}
+.strat-input::placeholder{color:var(--tx3)}
+.strat-examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.strat-tag{padding:5px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;font-size:11px;color:var(--tx3);cursor:pointer;transition:all .18s}
+.strat-tag:hover{background:rgba(79,70,229,.1);border-color:rgba(79,70,229,.3);color:var(--p)}
+
+
+/* ── 手动/自动模式切换 ── */
+.mode-tabs{display:flex;gap:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:4px;margin-bottom:12px}
+.mode-tab{flex:1;padding:8px 12px;border:none;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);color:var(--tx3);background:transparent;transition:all .2s}
+.mode-tab.on{background:rgba(79,70,229,.2);color:#c4b5fd;box-shadow:0 2px 8px rgba(79,70,229,.2)}
+.mode-desc{font-size:11px;color:var(--tx3);line-height:1.5;padding:0 2px}
+
+
+.hero-sponsor{display:flex;align-items:center;gap:10px;margin-top:20px;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;width:fit-content}
+.hero-sponsor-label{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--tx3)}
+.hero-sponsor-addr{font-size:12px;font-family:monospace;color:var(--p);cursor:pointer;transition:color .2s}
+.hero-sponsor-addr:hover{color:#e9d5ff}
+
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* AGENT_CSS_INSERTED */
+
+/* X Layer 额外样式 */
+body { background-image: radial-gradient(ellipse 90% 55% at 50% -5%,rgba(79,70,229,.28) 0%,transparent 65%), radial-gradient(ellipse 50% 35% at 95% 95%,rgba(99,58,237,.15) 0%,transparent 55%) !important; }
+.orb1 { background: radial-gradient(circle,rgba(79,70,229,.22) 0%,transparent 70%) !important; }
+.orb2 { background: radial-gradient(circle,rgba(99,58,237,.14) 0%,transparent 70%) !important; }
+.nav { border-bottom: 2px solid rgba(79,70,229,.55) !important; background: rgba(4,2,14,.96) !important; }
+.hero-panel::before { background: linear-gradient(90deg,transparent,rgba(79,70,229,.7),rgba(99,58,237,.5),transparent) !important; }
+.xl-chain-tag { display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(79,70,229,.12);border:1px solid rgba(79,70,229,.3);border-radius:20px;font-size:10px;font-weight:700;letter-spacing:2px;color:#818cf8;text-transform:uppercase;margin-bottom:16px }
+.xl-nav-badge { font-size:9px;font-weight:700;letter-spacing:2px;background:rgba(79,70,229,.2);border:1px solid rgba(79,70,229,.4);color:#818cf8;padding:2px 8px;border-radius:6px;margin-left:4px }
+.okx-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:28px }
+.okx-card { background:rgba(255,255,255,.03);border:1px solid rgba(79,70,229,.18);border-radius:14px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;transition:border-color .2s,transform .2s;cursor:pointer;text-decoration:none;color:inherit }
+.okx-card:hover { border-color:rgba(79,70,229,.45);transform:translateY(-2px);box-shadow:0 6px 24px rgba(79,70,229,.18) }
+.okx-card-icon { font-size:26px }
+.okx-card-name { font-size:13px;font-weight:700;color:#e8e4ff }
+.okx-card-desc { font-size:11px;color:var(--tx3);line-height:1.5 }
+.flow-steps { display:flex;align-items:center;gap:6px;margin:10px 0 18px;flex-wrap:wrap }
+.flow-step { font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;background:rgba(79,70,229,.1);border:1px solid rgba(79,70,229,.22);color:#818cf8;white-space:nowrap }
+.flow-arrow { color:var(--tx3);font-size:11px }
+.fn-list { display:flex;flex-direction:column;gap:8px }
+.fn-item { background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 16px }
+.fn-name { font-family:monospace;font-size:11px;color:#818cf8;font-weight:700;margin-bottom:4px;word-break:break-all }
+.fn-desc { font-size:12px;color:var(--tx3) }
+.cmp-table { width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden }
+.cmp-table th { padding:12px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-align:left;background:rgba(79,70,229,.1) }
+.cmp-table th:first-child { color:var(--tx3) }
+.cmp-table th:nth-child(2) { color:#f59e0b }
+.cmp-table th:last-child { color:#818cf8 }
+.cmp-table td { padding:12px 16px;font-size:13px;border-top:1px solid rgba(255,255,255,.05) }
+.cmp-table td:first-child { color:var(--tx3);font-size:11px;font-weight:600 }
+.cmp-table tr:hover td { background:rgba(255,255,255,.02) }
+.otap-flow { background:rgba(79,70,229,.05);border:1px solid rgba(79,70,229,.18);border-radius:14px;padding:24px }
+.otap-node { display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:7px 14px;font-weight:700;font-size:12px }
+.otap-arrow { display:block;margin-left:24px;color:var(--tx3);font-size:16px;line-height:1.8 }
+.doc-tabs { display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap }
+.dtab { padding:8px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--tx2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s }
+.dtab.on { background:rgba(79,70,229,.15);border-color:rgba(79,70,229,.4);color:#818cf8 }
+.my-tabs { display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap }
+.my-tab { padding:7px 16px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--tx2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font) }
+.my-tab.on { background:rgba(79,70,229,.15);border-color:rgba(79,70,229,.4);color:#818cf8 }
+.feat-list { display:flex;flex-direction:column;gap:6px;margin-bottom:20px }
+.feat { font-size:12px;color:var(--tx3);display:flex;align-items:flex-start;gap:6px }
+.feat::before { content:"✓";color:#34d399;font-weight:700;flex-shrink:0 }
+.xl-app-card { background:rgba(255,255,255,.03);border:1px solid rgba(79,70,229,.18);border-radius:20px;padding:28px;transition:border-color .2s,transform .2s }
+.xl-app-card:hover { border-color:rgba(79,70,229,.5);transform:translateY(-3px);box-shadow:0 10px 32px rgba(79,70,229,.2) }
+.xl-app-icon { width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin-bottom:16px }
+.xl-app-btn { width:100%;padding:12px;border-radius:12px;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);transition:opacity .15s }
+.xl-app-btn:hover { opacity:.83 }
+.status-card { background:rgba(255,255,255,.03);border:1px solid rgba(79,70,229,.15);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px }
+.agent-card-xl { background:rgba(255,255,255,.03);border:1px solid rgba(79,70,229,.18);border-radius:18px;padding:26px }
+.agent-hdr { display:flex;align-items:center;gap:14px;margin-bottom:16px }
+.agent-avatar { width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0 }
+@media(max-width:700px){.agd-metrics{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo" onclick="G('home')" style="cursor:pointer">
+    <img src="/seki-avatar.jpg" style="width:32px;height:32px;border-radius:10px;object-fit:cover;border:1.5px solid rgba(129,140,248,.4)">
+    <span style="font-size:15px;font-weight:900">Seki</span>
+    <span class="xl-nav-badge">X LAYER</span>
+  </div>
+  <div class="nav-links">
+    <button class="nl on" id="nl-home" onclick="G('home')">首页</button>
+    <button class="nl" id="nl-apps" onclick="G('apps')">应用市场</button>
+    <button class="nl" id="nl-hall" onclick="G('hall')">任务大厅</button>
+    <button class="nl" id="nl-agent" onclick="G('agent')">AI Agent</button>
+    <button class="nl" id="nl-docs" onclick="G('docs')">合约文档</button>
+    <button class="nl" id="nl-my" onclick="G('my')">我的</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button onclick="location.href='/'" style="padding:5px 12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;color:#f59e0b;font-size:11px;font-weight:700;cursor:pointer">← BSC</button>
+    <button id="wbtn" class="btnp" onclick="connectW()" style="font-size:12px;padding:7px 14px">连接钱包</button>
+  </div>
+</nav>
+
+<!-- ════ PAGE HOME ════ -->
+<div id="page-home" class="pw" style="display:block">
+
+<div class="hero-root">
+  <div class="hero-bg-orb orb1"></div>
+  <div class="hero-bg-orb orb2"></div>
+  <div class="hero-bg-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="xl-chain-tag">✦ X Layer · chainId 196 · Gas: OKB</div>
+      <h1 class="hero-h1">
+        <span class="hero-h1-line1" style="letter-spacing:-2px">自主协议</span>
+        <span class="hero-h1-line2" style="letter-spacing:-3px">由<em> X Layer</em> 驱动</span>
+      </h1>
+      <p class="hero-sub">Seki 在 X Layer 上构建开放 AI Agent 协议栈。三大垂直场景：<strong style="color:#818cf8">订阅市场</strong> · <strong style="color:#34d399">链上外包</strong> · <strong style="color:#f59e0b">DAO 执行</strong>。Gas 以 OKB 结算，原生接入 OKX 全生态。</p>
+      <div class="hero-cta">
+        <button id="hero-btn-main" class="hero-btn-primary" onclick="G('apps')">
+          <span>探索应用市场</span>
+          <span>→</span>
+        </button>
+        <button class="hero-btn-secondary" onclick="location.href='/'">BSC Meme 生态 ↗</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-panel">
+        <div class="hero-panel-avatar">
+          <img src="/seki-avatar.jpg" alt="Seki">
+          <div class="hero-panel-halo"></div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:15px;font-weight:800;margin-bottom:2px">Seki Agent</div>
+          <div style="font-size:11px;color:var(--tx3);letter-spacing:1px">UNIVERSAL AGENT PROTOCOL</div>
+        </div>
+        <div class="hero-panel-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="xs-t">—</div>
+            <div class="hero-stat-key">链上任务</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="xs-s">—</div>
+            <div class="hero-stat-key">Agent 服务</div>
+          </div>
+          <div class="hero-stat-div"></div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="xs-d">—</div>
+            <div class="hero-stat-key">DAO 提案</div>
+          </div>
+        </div>
+        <div class="hero-panel-footer">
+          <span class="hero-panel-tag">订阅市场</span>
+          <span class="hero-panel-tag">链上外包</span>
+          <span class="hero-panel-tag">DAO 执行</span>
+          <span class="hero-panel-tag">OKB Gas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 三 Agent 状态卡 -->
+<div style="max-width:1100px;margin:0 auto;padding:0 28px 40px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div class="agd-metric">
+      <div class="agd-metric-icon">🔵</div>
+      <div class="agd-metric-val" id="obs-stat">运行中</div>
+      <div class="agd-metric-key">ObserverAgent</div>
+      <div class="agd-metric-sub">每3分钟 · 链上信号采集</div>
+    </div>
+    <div class="agd-metric agd-metric-main">
+      <div class="agd-metric-icon">🟣</div>
+      <div class="agd-metric-val" id="dec-stat">运行中</div>
+      <div class="agd-metric-key">DecisionAgent</div>
+      <div class="agd-metric-sub">GPT-5.4 · LLM 推理决策</div>
+    </div>
+    <div class="agd-metric">
+      <div class="agd-metric-icon">🟢</div>
+      <div class="agd-metric-val" id="exe-stat">运行中</div>
+      <div class="agd-metric-key">ExecutorAgent</div>
+      <div class="agd-metric-sub">自主 OKB 支付 · 不经人手</div>
+    </div>
+  </div>
+</div>
+
+<!-- 飞轮流程（借鉴 BSC how 页） -->
+<div style="max-width:1100px;margin:0 auto;padding:0 28px 60px">
+  <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px">◆ ODA 协作流程</div>
+  <h2 style="font-size:clamp(24px,3.5vw,40px);font-weight:900;letter-spacing:-1.5px;margin-bottom:8px">一个自主驱动的<br><span style="background:linear-gradient(135deg,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">链上执行飞轮</span></h2>
+  <p style="font-size:14px;color:var(--tx2);line-height:1.8;max-width:560px;margin-bottom:36px">三层 Agent 进程协同工作，从链上信号采集到自主 OKB 支付全程无需人工，7x24小时不间断运行。</p>
+  <div class="agd-flow">
+    <div class="agd-flow-node">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(96,165,250,.15);border:2px solid rgba(96,165,250,.4);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#60a5fa;margin:0 auto 10px">O</div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx);margin-bottom:4px">ObserverAgent</div>
+      <div style="font-size:10px;color:var(--tx3)">采集链上信号</div>
+    </div>
+    <div class="agd-flow-arrow">→</div>
+    <div class="agd-flow-node">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(129,140,248,.15);border:2px solid rgba(129,140,248,.4);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#818cf8;margin:0 auto 10px">D</div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx);margin-bottom:4px">DecisionAgent</div>
+      <div style="font-size:10px;color:var(--tx3)">LLM 推理决策</div>
+    </div>
+    <div class="agd-flow-arrow">→</div>
+    <div class="agd-flow-node">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(52,211,153,.1);border:2px solid rgba(52,211,153,.35);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#34d399;margin:0 auto 10px">E</div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx);margin-bottom:4px">ExecutorAgent</div>
+      <div style="font-size:10px;color:var(--tx3)">自主 OKB 支付</div>
+    </div>
+    <div class="agd-flow-arrow">→</div>
+    <div class="agd-flow-node">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(79,70,229,.15);border:2px solid rgba(79,70,229,.4);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 10px">⛓️</div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx);margin-bottom:4px">链上 TX</div>
+      <div style="font-size:10px;color:var(--tx3)">X Layer / BSC</div>
+    </div>
+  </div>
+</div>
+
+<!-- 三大优势 -->
+<div style="max-width:1100px;margin:0 auto;padding:0 28px 60px">
+  <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px">◆ Why X Layer</div>
+  <h2 style="font-size:clamp(22px,3vw,36px);font-weight:900;letter-spacing:-1.5px;margin-bottom:36px">三大核心优势</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+    <div class="card">
+      <div style="width:48px;height:48px;border-radius:14px;background:rgba(79,70,229,.15);border:1px solid rgba(79,70,229,.3);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px">🔷</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:6px">OKX 原生生态</div>
+      <div style="font-size:12px;color:var(--tx2);line-height:1.8;margin-bottom:12px">X Layer 由 OKX 构建，与 OKX Web3 钱包、OKX DEX、OKLink 浏览器深度集成。</div>
+      <div class="feat-list">
+        <div class="feat">OKX Web3 Wallet 原生支持 X Layer</div>
+        <div class="feat">OKX Bridge 一键跨链充值 OKB</div>
+        <div class="feat">OKLink 所有合约链上可查</div>
+        <div class="feat">OKX DEX 提供最优流动性</div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="width:48px;height:48px;border-radius:14px;background:rgba(129,140,248,.12);border:1px solid rgba(129,140,248,.25);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px">🤖</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:6px">AI Agent 自主决策</div>
+      <div style="font-size:12px;color:var(--tx2);line-height:1.8;margin-bottom:12px">三层独立 Agent 进程协同，从信号采集到链上执行全程无需人工干预，7x24小时运行。</div>
+      <div class="feat-list">
+        <div class="feat">ObserverAgent 实时采集 X Layer 链上信号</div>
+        <div class="feat">DecisionAgent GPT-5.4 LLM 推理决策</div>
+        <div class="feat">ExecutorAgent 自主 OKB 支付，不经人手</div>
+        <div class="feat">决策全程上链，TX 可追溯</div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="width:48px;height:48px;border-radius:14px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.22);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px">🌐</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:6px">Universal Protocol</div>
+      <div style="font-size:12px;color:var(--tx2);line-height:1.8;margin-bottom:12px">不限于 Meme 代币，任何链上应用场景都可接入 SekiRegistry 协议。</div>
+      <div class="feat-list">
+        <div class="feat">不限代币类型，任意合约可接入</div>
+        <div class="feat">订阅 / 外包 / DAO 三大垂直场景</div>
+        <div class="feat">任何开发者都可注册 Agent 服务</div>
+        <div class="feat">5% 平台费，OKB 直接结算</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BSC vs X Layer 对比 -->
+<div style="max-width:1100px;margin:0 auto;padding:0 28px 60px">
+  <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px">◆ Comparison</div>
+  <h2 style="font-size:clamp(22px,3vw,36px);font-weight:900;letter-spacing:-1.5px;margin-bottom:28px">BSC vs X Layer</h2>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="cmp-table">
+      <thead><tr><th>维度</th><th>🟡 BSC</th><th>🔷 X Layer</th></tr></thead>
+      <tbody>
+        <tr><td>定位</td><td>Meme 激励生态</td><td>Universal Agent Protocol</td></tr>
+        <tr><td>Gas 代币</td><td>BNB</td><td>OKB</td></tr>
+        <tr><td>应用场景</td><td>four.meme Meme 代币</td><td>订阅 / 外包 / DAO / 任意合约</td></tr>
+        <tr><td>热门数据</td><td>DexScreener</td><td>DyorSwap</td></tr>
+        <tr><td>推荐钱包</td><td>MetaMask</td><td>OKX Web3 钱包（原生）</td></tr>
+        <tr><td>核心合约</td><td>MemeBountyV2 + AgentRegistry</td><td>SekiRegistry + MemeBountyV2 + AgentRegistry</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- OKX 生态 -->
+<div style="max-width:1100px;margin:0 auto;padding:0 28px 80px">
+  <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px">◆ OKX Ecosystem</div>
+  <h2 style="font-size:clamp(22px,3vw,36px);font-weight:900;letter-spacing:-1.5px;margin-bottom:8px">OKX 生态接入</h2>
+  <p style="font-size:14px;color:var(--tx2);line-height:1.8;margin-bottom:0">X Layer 由 OKX 构建，Seki 原生深度接入 OKX 全生态产品。</p>
+  <div class="okx-grid">
+    <a href="https://www.okx.com/web3" target="_blank" class="okx-card"><div class="okx-card-icon">💎</div><div class="okx-card-name">OKX Web3 Wallet</div><div class="okx-card-desc">原生支持 X Layer，Gas 更低，体验更流畅</div></a>
+    <a href="https://www.okx.com/bridge" target="_blank" class="okx-card"><div class="okx-card-icon">🌉</div><div class="okx-card-name">OKX Bridge</div><div class="okx-card-desc">BNB Chain 到 X Layer 一键跨链，充值 OKB</div></a>
+    <a href="https://www.okx.com/web3/dex" target="_blank" class="okx-card"><div class="okx-card-icon">🔄</div><div class="okx-card-name">OKX DEX</div><div class="okx-card-desc">X Layer 最大流动性，最优价格聚合</div></a>
+    <a href="https://www.oklink.com/xlayer" target="_blank" class="okx-card"><div class="okx-card-icon">🔍</div><div class="okx-card-name">OKLink 浏览器</div><div class="okx-card-desc">X Layer 链上浏览器，所有合约 TX 可查</div></a>
+    <a href="https://dyorswap.org/launch/?chainId=196" target="_blank" class="okx-card"><div class="okx-card-icon">🚀</div><div class="okx-card-name">DyorSwap</div><div class="okx-card-desc">X Layer 代币发射平台，Seki 推荐首选</div></a>
+  </div>
+</div>
+
+</div><!-- /page-home -->
+<div id='page-apps' class='pw' style='display:none'>
+<div class='agd-wrap'>
+  <div class='agd-header'>
+    <div><div class='agd-label'>Applications</div><h1 class='agd-title'>应用<span class='agd-accent'>市场</span></h1><p class='agd-sub'>基于 SekiRegistry Universal Agent Protocol，三大垂直场景开箱即用。</p></div>
+    <div class='agd-status'>● Universal Protocol</div>
+  </div>
+  <div style='display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px'>
+    <div class='xl-app-card'>
+      <div class='xl-app-icon' style='background:rgba(79,70,229,.15);border:1px solid rgba(79,70,229,.3);color:#818cf8'>A</div>
+      <div style='font-size:10px;font-weight:700;letter-spacing:1px;color:#818cf8;margin-bottom:5px'>AI AGENT MARKETPLACE</div>
+      <div style='font-size:18px;font-weight:900;margin-bottom:8px'>Agent 订阅市场</div>
+      <div style='font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px'>开发者注册 AI Agent 服务，设定订阅价格和周期。用户支付 OKB 订阅，Agent 自动执行服务，链上自动结算，无中间人。</div>
+      <div style='font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px'>工作流程</div>
+      <div class='flow-steps'><span class='flow-step'>① 注册服务</span><span class='flow-arrow'>→</span><span class='flow-step'>② 用户订阅</span><span class='flow-arrow'>→</span><span class='flow-step'>③ Agent 执行</span><span class='flow-arrow'>→</span><span class='flow-step'>④ 自动结算</span></div>
+      <div class='feat-list'><div class='feat'>链上订阅，自动续费，不可篡改</div><div class='feat'>OKB 直接结算到开发者钱包</div><div class='feat'>5% 平台手续费，其余全归服务方</div></div>
+      <button class='xl-app-btn' style='background:rgba(79,70,229,.2);border:1px solid rgba(79,70,229,.4);color:#818cf8' onclick='openM("subscribe")'>注册 Agent 服务 →</button>
+    </div>
+    <div class='xl-app-card'>
+      <div class='xl-app-icon' style='background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#34d399'>B</div>
+      <div style='font-size:10px;font-weight:700;letter-spacing:1px;color:#34d399;margin-bottom:5px'>BOUNTY MARKETPLACE</div>
+      <div style='font-size:18px;font-weight:900;margin-bottom:8px'>链上任务外包</div>
+      <div style='font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px'>发布任意链上任务，AI Agent 自动验收，验收通过自动发放 OKB 奖励，超时自动退款。</div>
+      <div style='font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px'>工作流程</div>
+      <div class='flow-steps'><span class='flow-step' style='background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25);color:#34d399'>① 发布任务</span><span class='flow-arrow'>→</span><span class='flow-step' style='background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25);color:#34d399'>② 等待完成</span><span class='flow-arrow'>→</span><span class='flow-step' style='background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25);color:#34d399'>③ AI 验收</span><span class='flow-arrow'>→</span><span class='flow-step' style='background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25);color:#34d399'>④ 自动发奖</span></div>
+      <div class='feat-list'><div class='feat'>不限行业和代币类型</div><div class='feat'>AI Agent 自动验收</div><div class='feat'>截止自动退款保障</div></div>
+      <button class='xl-app-btn' style='background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:#34d399' onclick='openM("bounty")'>发布外包任务 →</button>
+    </div>
+    <div class='xl-app-card'>
+      <div class='xl-app-icon' style='background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:#f59e0b'>D</div>
+      <div style='font-size:10px;font-weight:700;letter-spacing:1px;color:#f59e0b;margin-bottom:5px'>DAO EXECUTOR</div>
+      <div style='font-size:18px;font-weight:900;margin-bottom:8px'>DAO 自动执行器</div>
+      <div style='font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px'>DAO 发起提案，成员链上投票，投票通过后 Seki Agent 自动执行链上操作，无需多签人工介入。</div>
+      <div style='font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px'>工作流程</div>
+      <div class='flow-steps'><span class='flow-step' style='background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);color:#f59e0b'>① 创建提案</span><span class='flow-arrow'>→</span><span class='flow-step' style='background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);color:#f59e0b'>② 成员投票</span><span class='flow-arrow'>→</span><span class='flow-step' style='background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);color:#f59e0b'>③ 阈值通过</span><span class='flow-arrow'>→</span><span class='flow-step' style='background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);color:#f59e0b'>④ Agent 执行</span></div>
+      <div class='feat-list'><div class='feat'>投票通过即自动执行</div><div class='feat'>支持任意合约 calldata</div><div class='feat'>链上可追溯，永久保存</div></div>
+      <button class='xl-app-btn' style='background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:#f59e0b' onclick='openM("dao")'>创建 DAO 提案 →</button>
+    </div>
+  </div>
+</div>
+</div>
+<div id='page-hall' class='pw' style='display:none'>
+<div class='agd-wrap'>
+  <div class='agd-header'><div><div class='agd-label'>Task Hall</div><h1 class='agd-title'>X Layer <span class='agd-accent'>任务大厅</span></h1><p class='agd-sub'>由 Seki AI Agent 自主发布的链上激励任务，完成可获得 OKB 奖励。</p></div><div class='agd-status'>● OKB 奖励</div></div>
+  <div class='agd-metrics'>
+    <div class='agd-metric agd-metric-main'><div class='agd-metric-icon'>🏆</div><div class='agd-metric-val' id='hall-active'>—</div><div class='agd-metric-key'>活跃任务</div></div>
+    <div class='agd-metric'><div class='agd-metric-icon'>📋</div><div class='agd-metric-val' id='hall-total'>—</div><div class='agd-metric-key'>历史总任务</div></div>
+    <div class='agd-metric'><div class='agd-metric-icon'>💰</div><div class='agd-metric-val' id='hall-pool'>—</div><div class='agd-metric-key'>OKB 奖励池</div></div>
+    <div class='agd-metric'><div class='agd-metric-icon'>👥</div><div class='agd-metric-val' id='hall-workers'>—</div><div class='agd-metric-key'>参与者</div></div>
+  </div>
+  <div id='hall-list' style='display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px'></div>
+  <div id='hall-empty' style='display:none;flex-direction:column;align-items:center;padding:80px 24px;gap:16px;text-align:center'>
+    <div style='font-size:56px'>🤖</div>
+    <div style='font-size:18px;font-weight:800;color:var(--tx2)'>Agent 正在分析 X Layer 生态</div>
+    <div style='font-size:14px;color:var(--tx3)'>任务即将发布，请稍候...</div>
+  </div>
+</div>
+</div>
+
+<div id='page-agent' class='pw' style='display:none'>
+<div class='agd-wrap'>
+  <div class='agd-header'><div><div class='agd-label'>AI Agent Architecture</div><h1 class='agd-title'>三层 Agent <span class='agd-accent'>协作架构</span></h1><p class='agd-sub'>Seki 采用 ODA（Observer-Decision-Executor）三层独立进程架构，通过 agent-shared.json 传递状态，实现真正的自主决策与执行。</p></div><div class='agd-status' id='agent-live-status'>● 系统运行中</div></div>
+  <div class='agd-metrics'>
+    <div class='agd-metric'><div style='display:flex;align-items:center;gap:8px;margin-bottom:10px'><div style='width:10px;height:10px;border-radius:50%;background:#60a5fa;animation:blink 2s infinite' id='obs-dot'></div><span style='font-size:11px;font-weight:700;color:#60a5fa'>ObserverAgent</span></div><div class='agd-metric-val' id='obs-last' style='font-size:16px'>—</div><div class='agd-metric-key'>最后运行</div><div class='agd-metric-sub'>每3分钟 · 信号采集</div></div>
+    <div class='agd-metric agd-metric-main'><div style='display:flex;align-items:center;gap:8px;margin-bottom:10px'><div style='width:10px;height:10px;border-radius:50%;background:#818cf8;animation:blink 2s infinite' id='dec-dot'></div><span style='font-size:11px;font-weight:700;color:#818cf8'>DecisionAgent</span></div><div class='agd-metric-val' id='dec-last' style='font-size:16px'>—</div><div class='agd-metric-key'>最后运行</div><div class='agd-metric-sub'>LLM推理 · GPT-5.4</div></div>
+    <div class='agd-metric'><div style='display:flex;align-items:center;gap:8px;margin-bottom:10px'><div style='width:10px;height:10px;border-radius:50%;background:#34d399;animation:blink 2s infinite' id='exe-dot'></div><span style='font-size:11px;font-weight:700;color:#34d399'>ExecutorAgent</span></div><div class='agd-metric-val' id='exe-last' style='font-size:16px'>—</div><div class='agd-metric-key'>最后运行</div><div class='agd-metric-sub'>自主OKB支付</div></div>
+    <div class='agd-metric'><div class='agd-metric-icon'>📊</div><div class='agd-metric-val' id='dec-action' style='font-size:16px'>—</div><div class='agd-metric-key'>最新决策</div><div class='agd-metric-sub'>createTask/wait/alert</div></div>
+  </div>
+  <div class='agd-flow' style='margin-bottom:32px'>
+    <div class='agd-flow-node'><div style='width:44px;height:44px;border-radius:50%;background:rgba(96,165,250,.15);border:2px solid rgba(96,165,250,.4);display:flex;align-items:center;justify-content:center;font-weight:900;color:#60a5fa;margin:0 auto 8px'>O</div><div style='font-size:11px;font-weight:700'>Observer</div><div style='font-size:10px;color:var(--tx3)'>+0s</div></div>
+    <div class='agd-flow-arrow'>→</div>
+    <div class='agd-flow-node'><div style='font-size:10px;color:var(--tx3);text-align:center'>采集信号<br>写 shared.json</div></div>
+    <div class='agd-flow-arrow'>→</div>
+    <div class='agd-flow-node'><div style='width:44px;height:44px;border-radius:50%;background:rgba(129,140,248,.15);border:2px solid rgba(129,140,248,.4);display:flex;align-items:center;justify-content:center;font-weight:900;color:#818cf8;margin:0 auto 8px'>D</div><div style='font-size:11px;font-weight:700'>Decision</div><div style='font-size:10px;color:var(--tx3)'>+35s</div></div>
+    <div class='agd-flow-arrow'>→</div>
+    <div class='agd-flow-node'><div style='font-size:10px;color:var(--tx3);text-align:center'>LLM推理<br>输出 decision</div></div>
+    <div class='agd-flow-arrow'>→</div>
+    <div class='agd-flow-node'><div style='width:44px;height:44px;border-radius:50%;background:rgba(52,211,153,.1);border:2px solid rgba(52,211,153,.35);display:flex;align-items:center;justify-content:center;font-weight:900;color:#34d399;margin:0 auto 8px'>E</div><div style='font-size:11px;font-weight:700'>Executor</div><div style='font-size:10px;color:var(--tx3)'>+70s</div></div>
+    <div class='agd-flow-arrow'>→</div>
+    <div class='agd-flow-node'><div style='width:44px;height:44px;border-radius:50%;background:rgba(79,70,229,.15);border:2px solid rgba(79,70,229,.4);display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 8px'>⛓️</div><div style='font-size:11px;font-weight:700'>链上TX</div><div style='font-size:10px;color:var(--tx3)'>X Layer/BSC</div></div>
+  </div>
+  <div style='display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px'>
+    <div class='agent-card-xl'><div class='agent-hdr'><div class='agent-avatar' style='background:linear-gradient(135deg,#3b82f6,#1d4ed8)'>O</div><div><div style='font-size:15px;font-weight:800;color:#60a5fa'>ObserverAgent</div><div style='font-size:11px;color:var(--tx3)'>每3分钟 · systemd</div></div></div><div style='font-size:12px;color:var(--tx2);line-height:1.85;margin-bottom:12px'>实时采集 X Layer 和 BSC 双链信号，整理为结构化格式写入共享状态文件。</div><div class='feat-list'><div class='feat'>X Layer MemeBountyV2 活跃任务数</div><div class='feat'>AgentRegistry taxPool OKB 余额</div><div class='feat'>OKB 实时价格（OKX API）</div><div class='feat'>BSC BNB 价格+市场情绪信号</div></div></div>
+    <div class='agent-card-xl'><div class='agent-hdr'><div class='agent-avatar' style='background:linear-gradient(135deg,#4f46e5,#3730a3)'>D</div><div><div style='font-size:15px;font-weight:800;color:#818cf8'>DecisionAgent</div><div style='font-size:11px;color:var(--tx3)'>Observer +35s · LLM</div></div></div><div style='font-size:12px;color:var(--tx2);line-height:1.85;margin-bottom:12px'>规则引擎预筛选，调用 GPT-5.4 深度推理，输出标准化决策 JSON，有效期5分钟。</div><div class='feat-list'><div class='feat'>规则引擎：taxPool/任务数/价格阈值</div><div class='feat'>LLM 模型：GPT-5.4</div><div class='feat'>三种决策：createTask/wait/alert</div><div class='feat'>决策有效期5分钟，超时忽略</div></div></div>
+    <div class='agent-card-xl'><div class='agent-hdr'><div class='agent-avatar' style='background:linear-gradient(135deg,#059669,#047857)'>E</div><div><div style='font-size:15px;font-weight:800;color:#34d399'>ExecutorAgent</div><div style='font-size:11px;color:var(--tx3)'>Decision +35s · 执行</div></div></div><div style='font-size:12px;color:var(--tx2);line-height:1.85;margin-bottom:12px'>自主执行链上操作，从 taxPool（主）或 job.budget（次）划拨资金，Agent 自身钱包永不用于支付。</div><div class='feat-list'><div class='feat'>优先使用 taxPool OKB/BNB</div><div class='feat'>备用 job.budget 委托预算</div><div class='feat'>Agent 自身钱包永不用于支付</div><div class='feat'>BSC+X Layer 双链同时执行</div></div></div>
+  </div>
+  <div><div style='font-size:11px;font-weight:700;letter-spacing:2px;color:var(--tx3);margin-bottom:14px'>最近决策日志</div><div id='agent-log-list'><div style='font-size:13px;color:var(--tx3);padding:20px;text-align:center'>加载中...</div></div></div>
+</div>
+</div>
+
+<div id='page-docs' class='pw' style='display:none'>
+<div class='agd-wrap'>
+  <div class='agd-header'><div><div class='agd-label'>Contract Docs</div><h1 class='agd-title'>合约<span class='agd-accent'>文档</span></h1><p class='agd-sub'>Seki 在 X Layer 部署了三个核心合约，所有代码开源，可在 OKLink 上验证。</p></div></div>
+  <div class='doc-tabs'>
+    <button class='dtab on' id='dtab-seki' onclick="docsTab('seki')">SekiRegistry</button>
+    <button class='dtab' id='dtab-meme' onclick="docsTab('meme')">MemeBountyV2</button>
+    <button class='dtab' id='dtab-agentdoc' onclick="docsTab('agentdoc')">AgentRegistry</button>
+  </div>
+  <div id='ddoc-seki'>
+    <div style='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(79,70,229,.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;flex-wrap:wrap'><div style='flex:1'><div style='font-size:10px;color:var(--tx3);margin-bottom:4px'>SekiRegistry · X Layer · Universal Agent Protocol</div><div style='font-family:monospace;font-size:12px;color:var(--tx2)'>0x72F4eA26f2f7338C97618E623be420d840FFb7Bf</div></div><a style='font-size:12px;color:#818cf8;font-weight:700' href='https://www.oklink.com/xlayer/address/0x72F4eA26f2f7338C97618E623be420d840FFb7Bf' target='_blank'>OKLink ↗</a></div>
+    <div style='font-size:13px;color:var(--tx2);line-height:1.85;margin-bottom:22px'>Universal Agent Protocol 核心合约，严格实现 <a href='https://eips.ethereum.org/EIPS/eip-8183' target='_blank' style='color:#818cf8;font-weight:700'>ERC-8183 Agentic Commerce Protocol</a>。支持三大垂直场景：AI Agent 订阅市场、通用 Bounty 外包任务、DAO 自动执行器。平台费 5%，资金由合约锁定，不经过任何私人钱包。</div>
+    <div style='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px'>
+      <div style='padding:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.18);border-radius:10px;text-align:center'><div style='font-size:10px;font-weight:700;letter-spacing:1px;color:#3b82f6;margin-bottom:4px'>CLIENT</div><div style='font-size:12px;font-weight:700'>发布方</div><div style='font-size:11px;color:var(--tx3)'>锁定预算到合约</div></div>
+      <div style='padding:12px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.18);border-radius:10px;text-align:center'><div style='font-size:10px;font-weight:700;letter-spacing:1px;color:#34d399;margin-bottom:4px'>PROVIDER</div><div style='font-size:12px;font-weight:700'>完成方</div><div style='font-size:11px;color:var(--tx3)'>完成工作提交证明</div></div>
+      <div style='padding:12px;background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.2);border-radius:10px;text-align:center'><div style='font-size:10px;font-weight:700;letter-spacing:1px;color:#818cf8;margin-bottom:4px'>EVALUATOR</div><div style='font-size:12px;font-weight:700'>Seki Agent</div><div style='font-size:11px;color:var(--tx3)'>AI 验收 → 自动打款</div></div>
+    </div>
+    <div class='fn-list'>
+      <div class='fn-item'><div class='fn-name'>createService(agentAddr, pricePerCycle, cycleDuration, name, desc)</div><div class='fn-desc'>注册 AI Agent 订阅服务，设定地址、价格、周期</div></div>
+      <div class='fn-item'><div class='fn-name'>subscribeService(serviceId) payable</div><div class='fn-desc'>用户订阅服务，支付 OKB，链上记录订阅关系</div></div>
+      <div class='fn-item'><div class='fn-name'>createBountyTask(title, desc, judgeRule, rewardPerWorker, maxWorkers, deadline, agentJudge) payable</div><div class='fn-desc'>发布链上外包任务，锁定奖励资金到合约</div></div>
+      <div class='fn-item'><div class='fn-name'>submitWork(taskId, workUrl)</div><div class='fn-desc'>完成者提交成果链接，等待 AI Agent 验收</div></div>
+      <div class='fn-item'><div class='fn-name'>agentApprove(taskId, worker)</div><div class='fn-desc'>Agent 验收通过，自动划拨奖励给完成者</div></div>
+      <div class='fn-item'><div class='fn-name'>createProposal(desc, target, callData, votingDuration) payable</div><div class='fn-desc'>创建 DAO 提案，设定执行目标合约和 calldata</div></div>
+      <div class='fn-item'><div class='fn-name'>vote(proposalId, support)</div><div class='fn-desc'>DAO 成员链上投票，support=true/false</div></div>
+      <div class='fn-item'><div class='fn-name'>executeProposal(proposalId)</div><div class='fn-desc'>投票通过后由 Agent 自动执行提案</div></div>
+      <div class='fn-item'><div class='fn-name'>nextServiceId() / nextTaskId() / nextProposalId() view</div><div class='fn-desc'>查询各类别下一个 ID（统计用）</div></div>
+    </div>
+    <div style='margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px'>
+      <div style='font-size:12px;color:var(--tx3);padding:10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)'><strong style='color:var(--p)'>PLATFORM_FEE_BPS</strong><br>500（5%）平台服务费</div>
+      <div style='font-size:12px;color:var(--tx3);padding:10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)'><strong style='color:#34d399'>自动退款</strong><br>超时任务自动退款保障</div>
+      <div style='font-size:12px;color:var(--tx3);padding:10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)'><strong style='color:#f59e0b'>AI 验收</strong><br>agentApprove 自主审核</div>
+    </div>
+  </div>
+  <div id='ddoc-meme' style='display:none'>
+    <div style='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(79,70,229,.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;flex-wrap:wrap'><div style='flex:1'><div style='font-size:10px;color:var(--tx3);margin-bottom:4px'>MemeBountyV2 · X Layer</div><div style='font-family:monospace;font-size:12px;color:var(--tx2)'>0xBce8A6124255c0bB1e65DF6bb72A53833261455f</div></div><a style='font-size:12px;color:#818cf8;font-weight:700' href='https://www.oklink.com/xlayer/address/0xBce8A6124255c0bB1e65DF6bb72A53833261455f' target='_blank'>OKLink ↗</a></div>
+    <div style='font-size:13px;color:var(--tx2);line-height:1.85;margin-bottom:22px'>Meme Token 激励任务合约，Gas 以 OKB 结算。由 Seki ExecutorAgent 自主调用创建任务，支持持仓、交互、流动性三种任务类型，minTokenAmount ≥ 8,888,000 枚。</div>
+    <div class='fn-list'>
+      <div class='fn-item'><div class='fn-name'>createTask(token, taskType, budget, deadline, minTokenAmt, maxCompletions) payable</div><div class='fn-desc'>创建激励任务，锁定 OKB 预算到合约</div></div>
+      <div class='fn-item'><div class='fn-name'>completeTask(taskId)</div><div class='fn-desc'>用户完成任务后调用，领取 OKB 奖励</div></div>
+      <div class='fn-item'><div class='fn-name'>refund(taskId)</div><div class='fn-desc'>截止后未完成部分自动退款给创建者</div></div>
+      <div class='fn-item'><div class='fn-name'>getTask(taskId) view</div><div class='fn-desc'>查询任务完整信息（token/type/budget/completions）</div></div>
+    </div>
+    <div style='margin-top:18px;padding:14px;background:rgba(79,70,229,.06);border:1px solid rgba(79,70,229,.18);border-radius:12px'>
+      <div style='font-size:11px;font-weight:700;color:#818cf8;margin-bottom:8px'>任务类型</div>
+      <div style='display:grid;grid-template-columns:repeat(3,1fr);gap:10px'>
+        <div style='font-size:12px;color:var(--tx3);padding:8px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)'><strong style='color:var(--p)'>type=0 持仓</strong><br>持有目标代币即可领奖</div>
+        <div style='font-size:12px;color:var(--tx3);padding:8px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)'><strong style='color:var(--p)'>type=1 交互</strong><br>与目标合约交互可领奖</div>
+        <div style='font-size:12px;color:var(--tx3);padding:8px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06)'><strong style='color:var(--p)'>type=2 流动性</strong><br>添加流动性可领奖</div>
+      </div>
+    </div>
+  </div>
+  <div id='ddoc-agentdoc' style='display:none'>
+    <div style='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(79,70,229,.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;flex-wrap:wrap'><div style='flex:1'><div style='font-size:10px;color:var(--tx3);margin-bottom:4px'>AgentRegistry · X Layer · ERC-8183</div><div style='font-family:monospace;font-size:12px;color:var(--tx2)'>0xCB778Ac6A811A2712764F2cee69748CaCb71b80f</div></div><a style='font-size:12px;color:#818cf8;font-weight:700' href='https://www.oklink.com/xlayer/address/0xCB778Ac6A811A2712764F2cee69748CaCb71b80f' target='_blank'>OKLink ↗</a></div>
+    <div style='font-size:13px;color:var(--tx2);line-height:1.85;margin-bottom:22px'>AI Agent 注册与 taxPool 管理合约，ERC-8183 兼容协议。管理 Agent 身份注册、委托预算和税金池，ExecutorAgent 通过此合约读取资金状态并发起支付。</div>
+    <div class='fn-list'>
+      <div class='fn-item'><div class='fn-name'>registerAgent(agentAddr, name, desc)</div><div class='fn-desc'>注册 AI Agent，绑定链上身份</div></div>
+      <div class='fn-item'><div class='fn-name'>createJob(token, budget, deadline) payable</div><div class='fn-desc'>用户委托 Agent 管理代币，锁定 OKB 预算</div></div>
+      <div class='fn-item'><div class='fn-name'>taxPool() view</div><div class='fn-desc'>查询当前 taxPool OKB 余额</div></div>
+      <div class='fn-item'><div class='fn-name'>receive() payable</div><div class='fn-desc'>接收交易税，自动累入 taxPool</div></div>
+    </div>
+    <div style='margin-top:18px;padding:14px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.2);border-radius:12px'>
+      <div style='font-size:11px;font-weight:700;color:#34d399;margin-bottom:6px'>Agent 地址</div>
+      <div style='font-family:monospace;font-size:12px;color:var(--tx3)'>0x77044EebA9d094aF5fD93CB977bb82a583A5a26E</div>
+      <div style='font-size:11px;color:var(--tx3);margin-top:4px'>ERC-8183 兼容 · ODA 三层架构</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="page-my" class="pw" style="display:none">
+<div class="agd-wrap">
+  <div class="agd-header"><div><div class="agd-label">My Account</div><h1 class="agd-title">我的<span class="agd-accent">账户</span></h1></div></div>
+  <div id="my-unconnected" style="display:flex;flex-direction:column;align-items:center;padding:80px 24px;gap:16px;text-align:center">
+    <div style="font-size:64px;opacity:.2">🔗</div>
+    <div style="font-size:18px;font-weight:800;color:var(--tx2)">连接钱包查看我的数据</div>
+    <div style="font-size:14px;color:var(--tx3)">连接 OKX Web3 钱包或 MetaMask 以查看你的任务、订阅和提案</div>
+    <button class="hero-btn-primary" onclick="connectW()" style="margin-top:8px">连接 OKX 钱包</button>
+  </div>
+  <div id="my-connected" style="display:none">
+    <div class="my-tabs">
+      <button class="my-tab on" id="mt-tasks" onclick="myTab('tasks')">我的任务</button>
+      <button class="my-tab" id="mt-subs" onclick="myTab('subs')">我的订阅</button>
+      <button class="my-tab" id="mt-dao" onclick="myTab('daop')">我的提案</button>
+    </div>
+    <div id="my-tasks"><div style="font-size:13px;color:var(--tx3);padding:40px;text-align:center">暂无任务记录</div></div>
+    <div id="my-subs" style="display:none"><div style="font-size:13px;color:var(--tx3);padding:40px;text-align:center">暂无订阅记录</div></div>
+    <div id="my-daop" style="display:none"><div style="font-size:13px;color:var(--tx3);padding:40px;text-align:center">暂无提案记录</div></div>
+  </div>
+</div>
+</div>
+
+<footer style="padding:32px 28px;border-top:1px solid rgba(255,255,255,.06);max-width:1100px;margin:0 auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div style="font-size:13px;font-weight:700;color:#818cf8">Seki · X Layer</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a style="font-size:12px;color:var(--tx3)" href="https://www.oklink.com/xlayer" target="_blank">OKLink</a>
+      <a style="font-size:12px;color:var(--tx3)" href="https://www.okx.com/bridge" target="_blank">OKX Bridge</a>
+      <a style="font-size:12px;color:var(--tx3)" href="https://dyorswap.org/launch/?chainId=196" target="_blank">DyorSwap</a>
+      <a style="font-size:12px;color:var(--tx3)" href="/">← 返回 BSC</a>
+    </div>
+  </div>
+  <div style="font-size:11px;color:var(--tx3);margin-top:12px">Universal Agent Protocol · chainId 196 · Gas: OKB · Powered by X Layer</div>
+</footer>
+
+<div style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.78);backdrop-filter:blur(12px)" id="modal" onclick="if(event.target===this)closeM()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(460px,94vw);background:#0c0a1e;border:1px solid rgba(79,70,229,.3);border-radius:20px;padding:26px;max-height:85vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-size:15px;font-weight:800;color:#e8e4ff" id="mt-title"></div>
+      <button onclick="closeM()" style="width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.08);border:none;color:var(--tx2);font-size:16px;cursor:pointer">x</button>
+    </div>
+    <div id="mt-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script>
+const XL_RPC='https://rpc.xlayer.tech';
+const SR_ADDR='0x72F4eA26f2f7338C97618E623be420d840FFb7Bf';
+const MB_ADDR='0xBce8A6124255c0bB1e65DF6bb72A53833261455f';
+const SR_ABI=['function createService(address,uint256,uint256,string,string) returns (uint256)','function createBountyTask(string,string,string,uint256,uint256,uint256,bool) payable returns (uint256)','function createProposal(string,address,bytes,uint256) payable returns (uint256)','function nextServiceId() view returns (uint256)','function nextTaskId() view returns (uint256)','function nextProposalId() view returns (uint256)'];
+const MB_ABI=['function nextTaskId() view returns (uint256)','function getTask(uint256) view returns (tuple(uint256 id,address token,uint8 taskType,uint256 budget,uint256 deadline,bool active,address creator,uint256 minTokenAmount,uint256 completions,uint256 maxCompletions))'];
+let prov,sign,addr;
+const PAGES=['home','apps','hall','agent','docs','my'];
+function G(page){PAGES.forEach(p=>{const el=document.getElementById('page-'+p);if(el)el.style.display=p===page?'block':'none';const nl=document.getElementById('nl-'+p);if(nl)nl.classList.toggle('on',p===page);});if(page==='hall')loadHall();if(page==='agent')loadAgentStatus();}
+async function connectW(){if(!window.ethereum){alert('请安装 MetaMask 或 OKX 钱包');return;}try{prov=new ethers.BrowserProvider(window.ethereum);await prov.send('eth_requestAccounts',[]);try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0xc4'}]});}catch(e){if(e.code===4902)await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:'0xc4',chainName:'X Layer Mainnet',nativeCurrency:{name:'OKB',symbol:'OKB',decimals:18},rpcUrls:['https://rpc.xlayer.tech'],blockExplorerUrls:['https://www.oklink.com/xlayer']}]});}sign=await prov.getSigner();addr=await sign.getAddress();const wb=document.getElementById('wbtn');if(wb){wb.textContent=addr.slice(0,6)+'...'+addr.slice(-4);wb.style.cssText='background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:#34d399;padding:7px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer';}const mc=document.getElementById('my-connected'),mu=document.getElementById('my-unconnected');if(mc)mc.style.display='block';if(mu)mu.style.display='none';}catch(e){console.error(e);}}
+async function loadStats(){try{const p=new ethers.JsonRpcProvider(XL_RPC);const sr=new ethers.Contract(SR_ADDR,SR_ABI,p);const mb=new ethers.Contract(MB_ADDR,MB_ABI,p);const [s,b,d,t]=await Promise.all([sr.nextServiceId().catch(()=>0n),sr.nextTaskId().catch(()=>0n),sr.nextProposalId().catch(()=>0n),mb.nextTaskId().catch(()=>0n)]);const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};set('xs-t',Number(t));set('xs-s',Number(s));set('xs-d',Number(d));}catch(e){}}
+loadStats();
+async function loadHall(){
+  const listEl=document.getElementById('hall-list'),emptyEl=document.getElementById('hall-empty');
+  if(!listEl)return;listEl.innerHTML='';
+  try{
+    const p=new ethers.JsonRpcProvider(XL_RPC);
+    const mb=new ethers.Contract(MB_ADDR,MB_ABI,p);
+    const nextId=Number(await mb.nextTaskId().catch(()=>0n));
+    const totalEl=document.getElementById('hall-total');if(totalEl)totalEl.textContent=nextId;
+    if(nextId===0){if(emptyEl)emptyEl.style.display='flex';const ae=document.getElementById('hall-active');if(ae)ae.textContent='0';return;}
+    const ids=Array.from({length:Math.min(nextId,20)},(_,i)=>nextId-1-i);
+    const tasks=await Promise.all(ids.map(i=>mb.getTask(i).catch(()=>null)));
+    const tN=['持仓','交互','流动性'];
+    const tC=['#818cf8','#34d399','#f59e0b'];
+    let ac=0;
+    tasks.forEach(t=>{
+      if(!t)return;
+      const now=Math.floor(Date.now()/1000),isA=t.active&&Number(t.deadline)>now;
+      if(isA)ac++;
+      const budget=parseFloat(ethers.formatEther(t.budget)).toFixed(3);
+      const type=Number(t.taskType)%3;
+      const ddl=new Date(Number(t.deadline)*1000).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'});
+      const card=document.createElement('div');
+      card.className='card';
+      card.style.cssText='cursor:pointer';
+      const statusBg=isA?'rgba(52,211,153,.1)':'rgba(255,255,255,.05)';
+      const statusC=isA?'#34d399':'var(--tx3)';
+      const statusT=isA?'进行中':'已结束';
+      card.innerHTML=
+        '<div style="display:flex;justify-content:space-between;margin-bottom:12px">'+
+        '<span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;color:'+tC[type]+'">'+tN[type]+'任务</span>'+
+        '<span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:'+statusBg+';color:'+statusC+'">'+statusT+'</span></div>'+
+        '<div style="font-size:22px;font-weight:900;color:#818cf8;letter-spacing:-1px;margin-bottom:4px">'+budget+' <span style="font-size:12px;color:var(--tx3)">OKB</span></div>'+
+        '<div style="font-family:monospace;font-size:12px;color:var(--tx3);margin:6px 0">'+t.token.slice(0,6)+'...'+t.token.slice(-4)+'</div>'+
+        '<div style="font-size:11px;color:var(--tx3)">截止 '+ddl+'</div>'+
+        '<div style="margin-top:8px;font-size:11px;color:var(--tx3)">'+Number(t.completions)+'/'+Number(t.maxCompletions)+' 人完成</div>';
+      listEl.appendChild(card);
+    });
+    const ae=document.getElementById('hall-active');if(ae)ae.textContent=ac;
+    if(ac===0&&emptyEl)emptyEl.style.display='flex';
+  }catch(e){if(emptyEl)emptyEl.style.display='flex';}
+}
+async function loadAgentStatus(){
+  try{
+    const r=await fetch('/api/agent-status');if(!r.ok)return;
+    const d=await r.json();
+    const setDot=(id,a)=>{const e=document.getElementById(id);if(e)e.style.background=a?'#34d399':'#f87171';};
+    const setLast=(id,ts)=>{const e=document.getElementById(id);if(!e||!ts)return;const diff=Math.floor((Date.now()-ts)/60000);e.textContent=diff<1?'刚刚':diff+'分钟前';};
+    if(d.agents){
+      setDot('obs-dot',d.agents.observer&&d.agents.observer.alive);
+      setDot('dec-dot',d.agents.decision&&d.agents.decision.alive);
+      setDot('exe-dot',d.agents.executor&&d.agents.executor.alive);
+      setLast('obs-last',d.agents.observer&&d.agents.observer.lastRun);
+      setLast('dec-last',d.agents.decision&&d.agents.decision.lastRun);
+      setLast('exe-last',d.agents.executor&&d.agents.executor.lastRun);
+    }
+    if(d.lastDecision){
+      const dec=d.lastDecision,a=dec.action||'decision';
+      const ae=document.getElementById('dec-action');if(ae)ae.textContent=a;
+      const logEl=document.getElementById('agent-log-list');
+      if(logEl){
+        const reason=(dec.reason||dec.reasoning||'').slice(0,100);
+        const time=new Date(dec.timestamp||Date.now()).toLocaleTimeString('zh-CN');
+        logEl.innerHTML='<div class="card" style="display:flex;align-items:center;gap:10px;padding:14px 16px"><span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(79,70,229,.15);color:#818cf8">'+a+'</span><span style="flex:1;font-size:12px;color:var(--tx2)">'+reason+'</span><span style="font-size:10px;color:var(--tx3)">'+time+'</span></div>';
+      }
+    }
+    const as=document.getElementById('agent-live-status');
+    if(as&&d.agents){
+      const allAlive=Object.values(d.agents).every(a=>a&&a.alive);
+      as.textContent=allAlive?'● 系统运行中':'⚠ 部分离线';
+      as.style.color=allAlive?'#34d399':'#f59e0b';
+    }
+  }catch(e){}
+}
+function docsTab(name){
+  ['seki','meme','agentdoc'].forEach(n=>{
+    const d=document.getElementById('ddoc-'+n);if(d)d.style.display=n===name?'block':'none';
+    const btn=document.getElementById('dtab-'+n);if(btn)btn.classList.toggle('on',n===name);
+  });
+}
+function myTab(name){
+  ['tasks','subs','daop'].forEach(n=>{
+    const d=document.getElementById('my-'+n);if(d)d.style.display=n===name?'block':'none';
+    const map={tasks:'mt-tasks',subs:'mt-subs',daop:'mt-dao'};
+    const btn=document.getElementById(map[n]);if(btn)btn.classList.toggle('on',n===name);
+  });
+}
+function openM(type){
+  document.getElementById('modal').style.display='block';
+  const tt=document.getElementById('mt-title'),tb=document.getElementById('mt-body');
+  const inp='width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:var(--tx);font-size:13px;margin-bottom:10px;font-family:var(--font)';
+  const lbl='font-size:11px;font-weight:700;color:var(--tx3);display:block;margin-bottom:4px';
+  const btnBase='width:100%;padding:12px;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font)';
+  if(type==='subscribe'){
+    tt.textContent='注册 Agent 服务';
+    tb.innerHTML='<label style="'+lbl+'">服务名称</label><input id="s1" style="'+inp+'" placeholder="例: AI 推文生成">'+
+      '<label style="'+lbl+'">服务描述</label><textarea id="s2" rows="2" style="'+inp+';resize:none"></textarea>'+
+      '<label style="'+lbl+'">每周期价格 (OKB)</label><input id="s3" type="number" step="0.001" placeholder="0.01" style="'+inp+'">'+
+      '<label style="'+lbl+'">周期时长（分钟）</label><input id="s4" type="number" value="1440" style="'+inp+'">'+
+      '<button onclick="submitSvc()" style="'+btnBase+';border:none;background:linear-gradient(135deg,#4f46e5,#3730a3);color:#fff">注册服务</button>'+
+      '<div id="sst" style="font-size:12px;text-align:center;margin-top:8px;color:var(--tx3)"></div>';
+  }else if(type==='bounty'){
+    tt.textContent='发布外包任务';
+    tb.innerHTML='<label style="'+lbl+'">任务标题</label><input id="b1" style="'+inp+'" placeholder="例: 设计 X Layer Logo">'+
+      '<label style="'+lbl+'">任务描述</label><textarea id="b2" rows="2" style="'+inp+';resize:none"></textarea>'+
+      '<label style="'+lbl+'">AI 验收规则</label><input id="b3" style="'+inp+'" placeholder="提交作品链接">'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
+      '<div><label style="'+lbl+'">每人奖励(OKB)</label><input id="b4" type="number" step="0.001" placeholder="0.01" style="'+inp+'"></div>'+
+      '<div><label style="'+lbl+'">名额</label><input id="b5" type="number" value="5" style="'+inp+'"></div></div>'+
+      '<button onclick="submitBounty()" style="'+btnBase+';border:1px solid rgba(52,211,153,.3);background:rgba(52,211,153,.15);color:#34d399">发布任务</button>'+
+      '<div id="bst" style="font-size:12px;text-align:center;margin-top:8px;color:var(--tx3)"></div>';
+  }else if(type==='dao'){
+    tt.textContent='创建 DAO 提案';
+    tb.innerHTML='<label style="'+lbl+'">提案描述</label><textarea id="d1" rows="3" style="'+inp+';resize:none"></textarea>'+
+      '<label style="'+lbl+'">目标合约地址</label><input id="d2" style="'+inp+'" placeholder="0x...">'+
+      '<label style="'+lbl+'">调用数据</label><input id="d3" value="0x" style="'+inp+'">'+
+      '<label style="'+lbl+'">投票时长（分钟）</label><input id="d4" type="number" value="60" style="'+inp+'">'+
+      '<button onclick="submitDAO()" style="'+btnBase+';border:1px solid rgba(245,158,11,.3);background:rgba(245,158,11,.1);color:#f59e0b">创建提案</button>'+
+      '<div id="dst" style="font-size:12px;text-align:center;margin-top:8px;color:var(--tx3)"></div>';
+  }
+}
+function closeM(){document.getElementById('modal').style.display='none';}
+async function submitSvc(){
+  const st=document.getElementById('sst');if(!sign){st.textContent='请先连接钱包';return;}
+  try{st.textContent='等待确认...';
+    const c=new ethers.Contract(SR_ADDR,SR_ABI,sign);
+    const tx=await c.createService(addr,ethers.parseEther(document.getElementById('s3').value||'0.01'),BigInt((parseInt(document.getElementById('s4').value)||1440)*60),document.getElementById('s1').value,document.getElementById('s2').value);
+    st.textContent='提交中...';await tx.wait();st.textContent='✓ 注册成功';st.style.color='#34d399';
+  }catch(e){st.textContent='失败: '+(e.reason||e.message||'').slice(0,60);st.style.color='#f87171';}
+}
+async function submitBounty(){
+  const st=document.getElementById('bst');if(!sign){st.textContent='请先连接钱包';return;}
+  try{st.textContent='等待确认...';
+    const rpw=ethers.parseEther(document.getElementById('b4').value||'0.01');
+    const maxW=BigInt(document.getElementById('b5').value||'5');
+    const total=rpw*maxW;const fee=total*500n/10000n;
+    const c=new ethers.Contract(SR_ADDR,SR_ABI,sign);
+    const ddl=BigInt(Math.floor(Date.now()/1000)+3600);
+    const tx=await c.createBountyTask(document.getElementById('b1').value,document.getElementById('b2').value,document.getElementById('b3').value,rpw,maxW,ddl,true,{value:total+fee});
+    st.textContent='提交中...';await tx.wait();st.textContent='✓ 发布成功';st.style.color='#34d399';
+  }catch(e){st.textContent='失败: '+(e.reason||e.message||'').slice(0,60);st.style.color='#f87171';}
+}
+async function submitDAO(){
+  const st=document.getElementById('dst');if(!sign){st.textContent='请先连接钱包';return;}
+  try{st.textContent='等待确认...';
+    const c=new ethers.Contract(SR_ADDR,SR_ABI,sign);
+    const dur=BigInt((parseInt(document.getElementById('d4').value)||60)*60);
+    const tx=await c.createProposal(document.getElementById('d1').value,document.getElementById('d2').value,document.getElementById('d3').value,dur,{value:ethers.parseEther('0.001')});
+    st.textContent='提交中...';await tx.wait();st.textContent='✓ 提案创建成功';st.style.color='#34d399';
+  }catch(e){st.textContent='失败: '+(e.reason||e.message||'').slice(0,60);st.style.color='#f87171';}
+}
+setInterval(loadStats,30000);
+</script>
+</body>
+</html>

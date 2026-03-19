@@ -1,0 +1,47 @@
+node_modules/
+.env
+.openclaw/
+memory/
+MEMORY.md
+SOUL.md
+USER.md
+IDENTITY.md
+AGENTS.md
+HEARTBEAT.md
+TOOLS.md
+BOOTSTRAP.md
+.agents/
+skills-lock.json
+package-lock.json
+
+# memebounty-v2 敏感/临时文件
+memebounty-v2/agent-log.json
+memebounty-v2/agent-state.json
+memebounty-v2/agent-shared.json
+memebounty-v2/agent-jobs.json
+memebounty-v2/jobs.json
+memebounty-v2/task-owners.json
+memebounty-v2/task-meta.json
+memebounty-v2/story-state.json
+memebounty-v2/launch-count.json
+memebounty-v2/users.json
+
+# 备份文件
+*.bak
+*.bak2
+memebounty-v2/index.html.current-bak
+memebounty-v2/index.html.pre-ai-hero
+memebounty-v2/index.html.pre-morpho
+memebounty-v2/index.html.pre-split
+
+# 测试文件
+memebounty-v2/test*.js
+memebounty-v2/test*.html
+
+# 符号链接 skills（第三方）
+skills/okx-*
+
+# 打包文件
+*.tar.gz
+*.skill
+bnbchain-skills/

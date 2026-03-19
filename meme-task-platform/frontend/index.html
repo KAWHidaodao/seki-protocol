@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme 任务平台</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { color: #667eea; font-size: 28px; }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn:hover { background: #5568d3; }
+        .section {
+            background: rgba(255,255,255,0.95);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        .task-list { display: grid; gap: 16px; }
+        .task-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .task-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .task-id { color: #667eea; font-weight: 600; }
+        .task-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-open { background: #e3f2fd; color: #1976d2; }
+        .status-assigned { background: #fff3e0; color: #f57c00; }
+        .status-completed { background: #e8f5e9; color: #388e3c; }
+        .task-reward { font-size: 20px; font-weight: 700; color: #667eea; margin: 8px 0; }
+        .task-desc { color: #666; margin-bottom: 12px; }
+        .task-actions { display: flex; gap: 8px; }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Meme 任务平台</h1>
+            <button class="btn" id="connectBtn">连接钱包</button>
+        </div>
+
+        <div class="section">
+            <h2 style="margin-bottom: 16px;">发布任务</h2>
+            <div class="form-group">
+                <label>Meme 币地址</label>
+                <input type="text" id="tokenAddress" placeholder="0x...">
+            </div>
+            <div class="form-group">
+                <label>赏金数量</label>
+                <input type="text" id="rewardAmount" placeholder="1000">
+            </div>
+            <div class="form-group">
+                <label>任务描述</label>
+                <textarea id="taskDesc" placeholder="详细描述任务要求..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>截止时间（天）</label>
+                <input type="number" id="deadline" value="7">
+            </div>
+            <button class="btn" id="createTaskBtn">发布任务</button>
+        </div>
+
+        <div class="section">
+            <h2 style="margin-bottom: 16px;">任务列表</h2>
+            <div class="task-list" id="taskList"></div>
+        </div>
+    </div>
+
+    <script>
+        const CONTRACT_ADDRESS = "YOUR_CONTRACT_ADDRESS";
+        const ABI = [
+            "function createTask(address,uint256,string,uint256) returns (uint256)",
+            "function assignTask(uint256)",
+            "function completeTask(uint256)",
+            "function cancelTask(uint256)",
+            "function tasks(uint256) view returns (address,address,uint256,string,address,bool,bool,uint256)",
+            "function taskCounter() view returns (uint256)",
+            "event TaskCreated(uint256 indexed,address indexed,address,uint256)"
+        ];
+
+        let provider, signer, contract, account;
+
+        document.getElementById('connectBtn').onclick = async () => {
+            if (!window.ethereum) return alert('请安装 MetaMask');
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            await provider.send("eth_requestAccounts", []);
+            signer = provider.getSigner();
+            account = await signer.getAddress();
+            contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+            document.getElementById('connectBtn').textContent = account.slice(0,6) + '...' + account.slice(-4);
+            loadTasks();
+        };
+
+        document.getElementById('createTaskBtn').onclick = async () => {
+            const token = document.getElementById('tokenAddress').value;
+            const amount = ethers.utils.parseEther(document.getElementById('rewardAmount').value);
+            const desc = document.getElementById('taskDesc').value;
+            const days = document.getElementById('deadline').value;
+            const deadline = Math.floor(Date.now()/1000) + (days * 86400);
+            
+            const tokenContract = new ethers.Contract(token, ["function approve(address,uint256)"], signer);
+            await tokenContract.approve(CONTRACT_ADDRESS, amount);
+            await contract.createTask(token, amount, desc, deadline);
+            alert('任务发布成功！');
+            loadTasks();
+        };
+
+        async function loadTasks() {
+            const count = await contract.taskCounter();
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            for(let i = 0; i < count; i++) {
+                const task = await contract.tasks(i);
+                const card = `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <span class="task-id">#${i}</span>
+                            <span class="task-status ${task[5] ? 'status-completed' : task[4] !== ethers.constants.AddressZero ? 'status-assigned' : 'status-open'}">
+                                ${task[5] ? '已完成' : task[4] !== ethers.constants.AddressZero ? '进行中' : '待接取'}
+                            </span>
+                        </div>
+                        <div class="task-reward">${ethers.utils.formatEther(task[2])} 代币</div>
+                        <div class="task-desc">${task[3]}</div>
+                        <div class="task-actions">
+                            ${!task[5] && !task[6] && task[4] === ethers.constants.AddressZero ? 
+                                `<button class="btn btn-sm" onclick="assignTask(${i})">接取任务</button>` : ''}
+                            ${task[0].toLowerCase() === account?.toLowerCase() && task[4] !== ethers.constants.AddressZero && !task[5] ? 
+                                `<button class="btn btn-sm" onclick="completeTask(${i})">确认完成</button>` : ''}
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += card;
+            }
+        }
+
+        async function assignTask(id) {
+            await contract.assignTask(id);
+            alert('任务接取成功！');
+            loadTasks();
+        }
+
+        async function completeTask(id) {
+            await contract.completeTask(id);
+            alert('任务已完成！');
+            loadTasks();
+        }
+    </script>
+</body>
+</html>
