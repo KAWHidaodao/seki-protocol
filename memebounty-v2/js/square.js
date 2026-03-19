@@ -1,4 +1,58 @@
-function loadDelegations(){
+function loadTasks() {
+  var el = document.getElementById('task-list');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--tx2)">加载中...</div>';
+
+  var MOCK_TASKS = [
+    {id:1, token:'0x1234...abcd', tokenSymbol:'PEPE', type:0, reward:'0.012', deadline: Date.now()/1000+86400*3, creator:'0xabc1...', active:true},
+    {id:2, token:'0x2345...bcde', tokenSymbol:'DOGE', type:1, reward:'0.008', deadline: Date.now()/1000+86400*5, creator:'0xabc2...', active:true},
+    {id:3, token:'0x3456...cdef', tokenSymbol:'SHIB', type:2, reward:'0.025', deadline: Date.now()/1000+86400*2, creator:'0xabc3...', active:true},
+    {id:4, token:'0x4567...defa', tokenSymbol:'FLOKI', type:0, reward:'0.015', deadline: Date.now()/1000+86400*7, creator:'0xabc4...', active:true},
+    {id:5, token:'0x5678...efab', tokenSymbol:'BONK', type:1, reward:'0.006', deadline: Date.now()/1000+86400*4, creator:'0xabc5...', active:true},
+    {id:6, token:'0x6789...fabc', tokenSymbol:'WIF', type:2, reward:'0.032', deadline: Date.now()/1000+86400*6, creator:'0xabc6...', active:true},
+    {id:7, token:'0x7890...abcd', tokenSymbol:'MEME', type:0, reward:'0.009', deadline: Date.now()/1000+86400*1, creator:'0xabc7...', active:true},
+    {id:8, token:'0x8901...bcde', tokenSymbol:'TURBO', type:1, reward:'0.018', deadline: Date.now()/1000+86400*8, creator:'0xabc8...', active:true}
+  ];
+
+  function renderMock(tasks) {
+    el.innerHTML = '';
+    var typeMap = {0:'持仓', 1:'交互', 2:'流动性'};
+    tasks.forEach(function(t) {
+      var d = new Date(t.deadline * 1000);
+      var dateStr = d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+      var card = document.createElement('div');
+      card.className = 'task-card';
+      card.innerHTML = '<div class="task-header"><span class="task-token">'+t.tokenSymbol+'</span><span class="task-type-badge">'+typeMap[t.type]+'</span></div>'
+        +'<div class="task-reward"><span class="reward-amount">'+t.reward+' BNB</span></div>'
+        +'<div class="task-meta"><span>截止：'+dateStr+'</span><span>发布者：'+t.creator+'</span></div>'
+        +'<button class="btn-primary" onclick="completeTask('+t.id+')">完成任务</button>';
+      el.appendChild(card);
+    });
+  }
+
+  if (typeof window.contract === 'undefined' || !window.contract) {
+    renderMock(MOCK_TASKS);
+    return;
+  }
+
+  window.contract.getTaskCount().then(function(count) {
+    var n = parseInt(count);
+    if (n === 0) { renderMock(MOCK_TASKS); return; }
+    var promises = [];
+    for (var i = 0; i < n; i++) promises.push(window.contract.getTask(i));
+    return Promise.all(promises);
+  }).then(function(tasks) {
+    if (!tasks) return;
+    el.innerHTML = '';
+    tasks.forEach(function(t, idx) {
+      var card = renderTaskCard(t, idx);
+      if (card) el.appendChild(card);
+    });
+  }).catch(function(e) {
+    console.error('loadTasks error', e);
+    renderMock(MOCK_TASKS);
+  });
+}function loadDelegations(){
  const list=JSON.parse(localStorage.getItem('mb_delegations')||'[]');
  const el=document.getElementById('dlist');
  if(!el)return;
