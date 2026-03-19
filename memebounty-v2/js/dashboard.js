@@ -623,20 +623,7 @@ async function loadOnchainDecisions() {
   } catch(e) { console.warn('loadOnchainDecisions:', e.message); }
 }
 
-function docTab(tab, el) {
- ['docs-logic','docs-contract','docs-dev','docs-roadmap'].forEach(function(id){
-   const d = document.getElementById(id);
-   if(d) d.style.display = id === 'docs-'+tab ? '' : 'none';
- });
- document.querySelectorAll('[id^="dtag-"]').forEach(function(b){
-   b.style.cssText = b.style.cssText.replace(/background:[^;]+;?/g,'').replace(/color:[^;]+;?/g,'').replace(/border:[^;]+;?/g,'');
-   b.style.background = 'transparent';
-   b.style.color = 'var(--tx2)';
-   b.style.border = '1px solid rgba(255,255,255,.15)';
- });
- if(el){ el.style.background='rgba(124,58,237,.15)'; el.style.color='var(--p)'; el.style.border='1px solid var(--p)'; }
- if(tab==='logic') loadLogicSentiment();
-}
+// docTab defined in app.js
 
 
 async function loadAgentStatus() {
