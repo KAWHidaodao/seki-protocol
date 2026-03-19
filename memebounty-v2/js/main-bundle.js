@@ -647,18 +647,7 @@ async function render(){
  const hc=document.getElementById('hall-count');
  if(hc) hc.textContent=fl.length+' 个任务';
  if(!fl.length){g.innerHTML=`
- <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;opacity:.6">
- <div style="position:relative;width:80px;height:80px">
- <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(124,58,237,.3);animation:spin 8s linear infinite"></div>
- <div style="position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(96,165,250,.2);animation:spin 5s linear infinite reverse"></div>
- <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px"></div>
- </div>
- <div style="text-align:center">
- <div style="font-size:14px;font-weight:700;color:var(--tx2);margin-bottom:6px">Agent 正在待命</div>
- <div style="font-size:12px;color:var(--tx3);line-height:1.6">首个代币发布并委托后<br>任务将自动出现在这里</div>
- </div>
- <button class="hero-btn-primary" style="font-size:13px;padding:10px 22px" onclick="G('launch',document.querySelectorAll('.nl')[1])">立即发币 →</button>
- </div>`;return}
+ `;return}
  const cards=await Promise.all(fl.map(mkCard));
  g.innerHTML=cards.join('');
 }
@@ -698,19 +687,7 @@ async function mkCard({id,b,cd}){
  : '<span class="cs go">进行中</span>';
  const idx2 = (tasks||[]).findIndex(t=>Number(t.id)===Number(id));
  const num = String(idx2>=0?idx2+1:1).padStart(2,'0');
- return '<div class="tc'+(full?' full':'')+'" onclick="openTask('+id+')">'
- +'<div class="tc-num">'+num+'</div>'
- +'<div class="tc-body">'
- +'<div class="tch">'+agentBadge+statusBadge+'</div>'
- +'<div class="cti">'+escH(title)+'</div>'
- +(m.desc?'<div class="cde">'+escH(m.desc)+'</div>':'')
- +'</div>'
- +'<div class="tc-meta">'
- +'<div class="crw">'+rstr+'</div>'
- +'<div class="tc-remain">'+rem+'/'+Number(_maxW)+' 名额</div>'
- +'<div class="tc-dl">'+dl+'</div>'
- +'</div>'
- +'</div>'
+ return ''
 }
 
 function _cond(tp,cd,b){
@@ -780,8 +757,8 @@ async function openTask(id){
  Promise.all([hs_,cl_]).then(async ([hs,cl])=>{
  let actHtml='';
  if(!addr){actHtml='<button class="pn-btn-main" onclick="connectW()">连接钱包参与</button>';}
- else if(cl){actHtml='<div style="text-align:center;margin-top:16px;color:var(--gr);font-weight:700">✓ 已领取奖励</div>';}
- else if(full){actHtml='<div style="text-align:center;margin-top:16px;color:var(--su)">名额已满</div>';}
+ else if(cl){actHtml='';}
+ else if(full){actHtml='';}
  else if(tp===0){
  if(hs>0){
  const elapsed=Math.floor(Date.now()/1000)-hs;
@@ -790,7 +767,7 @@ async function openTask(id){
  const done=elapsed>=need;
  actHtml=done
  ?'<button class="pn-btn-main" onclick="closeP();doAct(0,'+id+',\"claim\")"> 领取奖励</button>'
- :'<div style="margin-top:16px;background:var(--g1);border-radius:10px;padding:14px;text-align:center"><div style="font-size:12px;color:var(--su);margin-bottom:6px">持仓计时中</div><div style="font-size:22px;font-weight:800;color:var(--p)" id="pcd">'+fmtTime(remain)+'</div><div style="font-size:11px;color:var(--su);margin-top:4px">达标后刷新页面领奖</div></div>';
+ :'';
  if(!done)setTimeout(()=>{const el=document.getElementById('pcd');if(el)el.textContent=fmtTime(Math.max(0,Number(cd.minHoldSeconds)-(Math.floor(Date.now()/1000)-hs)))},1000);
  } else {
  actHtml='<button class="pn-btn-main" onclick="closeP();doAct(0,'+id+',\"start\")">⏱ 开始持仓计时</button>';
@@ -813,24 +790,7 @@ async function openTask(id){
  const balFmt = (Number(userBal) / 1e18).toLocaleString();
  const nativeSym = currentChain ? currentChain.symbol : 'BNB';
  const buyBnbAmt = cd.minBuyBNB && cd.minBuyBNB !== '0' ? ethers.formatEther(cd.minBuyBNB) : '';
- actHtml = '<div style="margin-top:16px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:16px">'
-  + '<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#60a5fa;margin-bottom:12px">◆ 持仓进度</div>'
-  + (addr ? (
-    '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px">'
-    + '<span style="color:var(--tx3)">当前持仓</span>'
-    + '<span style="font-weight:700;color:'+(reached?'#34d399':'var(--tx)')+'">'+balFmt+' / '+minFmt+'</span>'
-    + '</div>'
-    + '<div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;margin-bottom:10px;overflow:hidden">'
-    + '<div style="height:100%;width:'+pctHold+'%;background:'+(reached?'#34d399':'#60a5fa')+';border-radius:3px;transition:width .5s"></div>'
-    + '</div>'
-    + (reached
-      ? '<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#34d399;margin-bottom:10px"><span>✓ 持仓已达标</span></div>'
-        + '<button class="pn-btn-main" onclick="closeP();doAct(1,'+id+',\"claim\")">领取奖励</button>'
-      : '<div style="font-size:12px;color:var(--tx3);line-height:1.7;margin-bottom:10px">还差 <strong style="color:#f59e0b">'+(Number((minAmt-userBal<0n?0n:minAmt-userBal))/1e18).toLocaleString()+'</strong> 枚达标</div>'
-        + (buyBnbAmt ? '<div style="font-size:11px;color:var(--tx3);margin-bottom:10px">或买入 ≥ '+buyBnbAmt+' '+nativeSym+' 后 AI 自动核查</div>' : '')
-        + '<a href="https://www.okx.com/web3/dex-swap#inputChain='+currentChain.id+'&inputCurrency=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputChain='+currentChain.id+'&outputCurrency='+targetTok+'" target="_blank" class="pn-btn-main" style="display:block;text-align:center;text-decoration:none;background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)">去买入代币 ↗</a>')
-  ) : '<button class="pn-btn-main" onclick="connectW()">连接钱包查看进度</button>')
-  + '</div>';
+ actHtml = '';
  } else if(tp===2){
  actHtml='<button class="pn-btn-main" onclick="closeP();doAct(2,'+id+')"> 立即领取</button>';
  } else if(tp===3){
@@ -861,10 +821,7 @@ async function openTask(id){
  [holdAmtStr,'报名参赛','截止时按持仓排名前'+Number(b.maxWinners)+'名获奖'],
  ];
  const stepsArr = stepsMap[tp]||stepsMap[0];
- const stepsHtml = '<div class="pn-steps">'
- +'<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--p);margin-bottom:8px">如何参与</div>'
- +stepsArr.map((s,i)=>'<div class="pn-step"><div class="pn-step-num">'+(i+1)+'</div><div class="pn-step-txt">'+s+'</div></div>').join('')
- +'</div>';
+ const stepsHtml = '';
 
  // 门槛卡片
  const thItems=[];
@@ -1706,12 +1663,7 @@ async function loadOnchainDecisions() {
         const tagColor = {CREATE:'#34d399',WAIT:'#6b7280',CANCEL:'#f87171',INFO:'#60a5fa'}[tag]||'#6b7280';
         const ts = l.ts ? new Date(l.ts).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}) : '';
         const txLink = l.txHash ? ` <a href="https://bscscan.com/tx/${l.txHash}" target="_blank" style="color:var(--p);font-size:10px">链上 ↗</a>` : '';
-        return `<div style="display:flex;align-items:baseline;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-          <span style="font-size:9px;font-weight:700;letter-spacing:.5px;color:${tagColor};min-width:44px">${tag}</span>
-          <span style="color:var(--tx3);font-size:10px;white-space:nowrap">${ts}</span>
-          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(l.msg||'')}</span>
-          ${txLink}
-        </div>`;
+        return ``;
       }).join('');
     }
   } catch(e) { console.warn('loadOnchainDecisions:', e.message); }
@@ -2193,13 +2145,9 @@ async function loadMy(){
  <div style="font-weight:700;font-size:14px">${escH(tk.name)} <span style="color:var(--tx3);font-size:12px;font-weight:400">(${escH(tk.symbol)})</span></div>
  <div style="font-size:11px;color:var(--tx3);font-family:monospace;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${tk.pending?'⏳ 上链中... '+tk.txHash.slice(0,18)+'...':tk.addr||'—'}</div>
  <div style="font-size:11px;color:var(--tx3);margin-top:2px">${new Date(tk.ts).toLocaleString('zh-CN')}</div>
- <div data-token-addr="${tk.addr||''}" style="min-height:16px"></div>
+ 
  </div>
- <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
- <a href="${tk.addr?'https://bscscan.com/token/'+tk.addr:'https://bscscan.com/tx/'+tk.txHash}" target="_blank" class="btns" style="font-size:11px;padding:4px 10px;text-decoration:none">◈ BSCScan ↗</a>
- ${tk.addr?`<a href="https://four.meme/token/${tk.addr}" target="_blank" class="btns" style="font-size:11px;padding:4px 10px;text-decoration:none">Four.meme ↗</a>`:''}
- ${tk.addr?`<button class="btns" style="font-size:11px;padding:4px 10px" onclick="document.getElementById('d0').value='${tk.addr}';G('delegate',null);toast('代币已填入委托表单','s')"><span style="letter-spacing:.5px">委托 Agent</span></button>`:''}
- </div>
+ 
  </div>
  `).join('');
 }
@@ -2893,9 +2841,9 @@ window.paAiParse = async function() {
       const desc = fullText.split('\n')[0].replace(/[#*`]/g,'').trim() || '策略解析成功';
       const detail = '类型: ' + (s.taskTypes||[]).map(t=>['持仓','交互','早鸟'][t]||t).join('+') +
         ' · 最低: ' + s.minReward + 'BNB · 每日: ' + s.maxPerDay + '次';
-      if (txt) txt.innerHTML = '<div style="color:#34d399;font-weight:700;margin-bottom:4px">' + desc + '</div>'
-        + '<div style="font-size:11px;color:var(--tx3)">' + detail + '</div>'
-        + '<div style="margin-top:8px;padding:6px 10px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:7px;font-size:11px;color:#34d399">✓ 策略已预览到下方表单，点「应用此策略」永久保存</div>';
+      if (txt) txt.innerHTML = ''
+        + ''
+        + '';
       if (res) res.style.display = 'block';
       // 预填表单
       try {
@@ -2908,11 +2856,11 @@ window.paAiParse = async function() {
         if(pcard) pcard.scrollIntoView({behavior:'smooth',block:'center'});
       } catch(ex) {}
     } else {
-      if (txt) txt.innerHTML = '<div style="color:#f87171">解析失败，请换种说法</div><div style="font-size:10px;color:var(--tx3)">' + fullText.slice(0,80) + '</div>';
+      if (txt) txt.innerHTML = '';
       if (res) res.style.display = 'block';
     }
   } catch(e) {
-    if (txt) txt.innerHTML = '<div style="color:#f87171">请求失败：' + e.message + '</div>';
+    if (txt) txt.innerHTML = '';
     if (res) res.style.display = 'block';
   }
   btn.disabled = false; if(loading) loading.style.display = 'none';
