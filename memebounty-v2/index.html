@@ -2166,104 +2166,91 @@ id="page-wendang" class="pw" style="display:none">
     </div>
 </div>
   <div id="docs-roadmap" style="display:none">
-    <div style="max-width:900px;margin:0 auto;padding:20px 0 40px">
-  <div style="text-align:center;margin-bottom:48px">
-    <h2 style="font-size:28px;font-weight:900;margin:0 0 12px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">路线图</h2>
-    <p style="color:#94a3b8;font-size:14px;margin:0">Seki Protocol · 发展规划</p>
+    <div style="max-width:860px;margin:0 auto;padding:32px 20px 60px">
+      <h2 style="text-align:center;font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--tx1);margin-bottom:8px">Roadmap</h2>
+      <p style="text-align:center;color:var(--tx3);font-size:13px;margin-bottom:48px;letter-spacing:1px">Seki Protocol · 四阶段演进计划</p>
+      <div style="position:relative;padding-left:32px">
+        <!-- vertical line -->
+        <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(124,58,237,.6),rgba(124,58,237,.1))"></div>
+
+        <!-- Phase 1 -->
+        <div style="position:relative;margin-bottom:40px">
+          <div style="position:absolute;left:-26px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--p);box-shadow:0 0 10px rgba(124,58,237,.8)"></div>
+          <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);border-radius:16px;padding:24px 28px;backdrop-filter:blur(8px)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--p);background:rgba(124,58,237,.12);padding:3px 10px;border-radius:20px;border:1px solid rgba(124,58,237,.3)">Phase 1</span>
+              <span style="font-size:13px;font-weight:700;color:#4ade80">已完成 ✅</span>
+            </div>
+            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#4ade80;margin-top:1px">✓</span>MemeBountyV5 合约上线 BSC 主网</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#4ade80;margin-top:1px">✓</span>Agent 委托系统（ERC-8183）上线</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#4ade80;margin-top:1px">✓</span>任务大厅：持仓 / 买入 / 早鸟 / 推荐 / 锦标赛 5 种任务类型</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#4ade80;margin-top:1px">✓</span>前端 seki-ai.com 上线</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#4ade80;margin-top:1px">✓</span>AgentReportHook 链上工作记录</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div style="position:relative;margin-bottom:40px">
+          <div style="position:absolute;left:-26px;top:4px;width:12px;height:12px;border-radius:50%;background:rgba(251,191,36,1);box-shadow:0 0 10px rgba(251,191,36,.7)"></div>
+          <div style="background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.2);border-radius:16px;padding:24px 28px;backdrop-filter:blur(8px)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fbbf24;background:rgba(251,191,36,.1);padding:3px 10px;border-radius:20px;border:1px solid rgba(251,191,36,.3)">Phase 2</span>
+              <span style="font-size:13px;font-weight:700;color:#fbbf24">进行中 🔄</span>
+              <span style="font-size:11px;color:var(--tx3);margin-left:auto">Q2 2026</span>
+            </div>
+            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#fbbf24;margin-top:1px">◎</span>Agent 自动扫链 + 自动发任务（createTaskFromTax）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#fbbf24;margin-top:1px">◎</span>税收池机制上线（four.meme 税收自动注入）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#fbbf24;margin-top:1px">◎</span>多 Agent 市场：strategist / hunter / analyst / guardian</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#fbbf24;margin-top:1px">◎</span>委托一键发起（createJobAndFund）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx2);font-size:13px"><span style="color:#fbbf24;margin-top:1px">◎</span>移动端适配优化</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div style="position:relative;margin-bottom:40px">
+          <div style="position:absolute;left:-26px;top:4px;width:12px;height:12px;border-radius:50%;background:rgba(99,102,241,.8);box-shadow:0 0 10px rgba(99,102,241,.5)"></div>
+          <div style="background:rgba(99,102,241,.04);border:1px solid rgba(99,102,241,.15);border-radius:16px;padding:24px 28px;backdrop-filter:blur(8px)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#818cf8;background:rgba(99,102,241,.1);padding:3px 10px;border-radius:20px;border:1px solid rgba(99,102,241,.25)">Phase 3</span>
+              <span style="font-size:13px;font-weight:700;color:#818cf8">规划中 📋</span>
+              <span style="font-size:11px;color:var(--tx3);margin-left:auto">Q3 2026</span>
+            </div>
+            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="color:#818cf8;margin-top:1px">○</span>SEKI 治理代币发行</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="color:#818cf8;margin-top:1px">○</span>Agent 评分系统（链上信誉积分）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="color:#818cf8;margin-top:1px">○</span>DAO 投票：Agent 准入 / 任务参数</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="color:#818cf8;margin-top:1px">○</span>跨链支持（Base / Arbitrum）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="color:#818cf8;margin-top:1px">○</span>Agent SDK 开放给第三方开发者</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div style="position:relative">
+          <div style="position:absolute;left:-26px;top:4px;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2)"></div>
+          <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px 28px;backdrop-filter:blur(8px)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1)">Phase 4</span>
+              <span style="font-size:13px;font-weight:700;color:var(--tx3)">远期愿景 🚀</span>
+              <span style="font-size:11px;color:var(--tx3);margin-left:auto">Q4 2026+</span>
+            </div>
+            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="margin-top:1px">○</span>Agent 市场开放（任何人可注册 Agent）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="margin-top:1px">○</span>AI × 链上数据深度融合（持仓分析 / 情绪预测）</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="margin-top:1px">○</span>B2B API：项目方直接接入 Seki Agent 做市营销</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="margin-top:1px">○</span>多链 Agent 协作网络</li>
+              <li style="display:flex;align-items:flex-start;gap:10px;color:var(--tx3);font-size:13px"><span style="margin-top:1px">○</span>Seki Protocol 白皮书 v2</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
-
-  <!-- 时间轴容器 -->
-  <div style="position:relative;padding-left:40px">
-    <!-- 竖线 -->
-    <div style="position:absolute;left:15px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,#7c3aed,#2563eb,#0891b2,#6d28d9)"></div>
-
-    <!-- Phase 1 -->
-    <div style="position:relative;margin-bottom:40px">
-      <div style="position:absolute;left:-32px;top:12px;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a78bfa);box-shadow:0 0 12px rgba(124,58,237,0.7);z-index:1"></div>
-      <div style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(167,139,250,0.06));border:1px solid rgba(124,58,237,0.35);border-radius:16px;padding:24px 28px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-          <div>
-            <span style="font-size:11px;color:#a78bfa;font-weight:700;letter-spacing:1px;text-transform:uppercase">Phase 1</span>
-            <h3 style="font-size:18px;font-weight:800;margin:4px 0 0;color:#e2e8f0">Genesis</h3>
-          </div>
-          <span style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);color:#4ade80;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px">✅ 已完成</span>
-        </div>
-        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>✅</span><span>MemeBountyV5 合约上线 BSC 主网</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>✅</span><span>Agent 委托系统（ERC-8183）上线</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>✅</span><span>任务大厅：持仓 / 买入 / 早鸟 / 推荐 / 锦标赛 5 种任务类型</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>✅</span><span>前端 seki-ai.com 上线</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>✅</span><span>AgentReportHook 链上工作记录</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Phase 2 -->
-    <div style="position:relative;margin-bottom:40px">
-      <div style="position:absolute;left:-32px;top:12px;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#60a5fa);box-shadow:0 0 12px rgba(37,99,235,0.7);z-index:1"></div>
-      <div style="background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(96,165,250,0.06));border:1px solid rgba(37,99,235,0.35);border-radius:16px;padding:24px 28px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-          <div>
-            <span style="font-size:11px;color:#60a5fa;font-weight:700;letter-spacing:1px;text-transform:uppercase">Phase 2 · Q2 2026</span>
-            <h3 style="font-size:18px;font-weight:800;margin:4px 0 0;color:#e2e8f0">Ignition</h3>
-          </div>
-          <span style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);color:#fbbf24;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px">🔄 进行中</span>
-        </div>
-        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🔄</span><span>Agent 自动扫链 + 自动发任务（createTaskFromTax）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🔄</span><span>税收池机制上线（four.meme 税收自动注入）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🔄</span><span>多 Agent 市场：strategist / hunter / analyst / guardian</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🔄</span><span>委托一键发起（createJobAndFund）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🔄</span><span>移动端适配优化</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Phase 3 -->
-    <div style="position:relative;margin-bottom:40px">
-      <div style="position:absolute;left:-32px;top:12px;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#0891b2,#22d3ee);box-shadow:0 0 12px rgba(8,145,178,0.7);z-index:1"></div>
-      <div style="background:linear-gradient(135deg,rgba(8,145,178,0.12),rgba(34,211,238,0.06));border:1px solid rgba(8,145,178,0.35);border-radius:16px;padding:24px 28px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-          <div>
-            <span style="font-size:11px;color:#22d3ee;font-weight:700;letter-spacing:1px;text-transform:uppercase">Phase 3 · Q3 2026</span>
-            <h3 style="font-size:18px;font-weight:800;margin:4px 0 0;color:#e2e8f0">Expansion</h3>
-          </div>
-          <span style="background:rgba(148,163,184,0.15);border:1px solid rgba(148,163,184,0.4);color:#94a3b8;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px">📋 规划中</span>
-        </div>
-        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>📋</span><span>SEKI 治理代币发行</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>📋</span><span>Agent 评分系统（链上信誉积分）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>📋</span><span>DAO 投票：Agent 准入 / 任务参数</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>📋</span><span>跨链支持（Base / Arbitrum）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>📋</span><span>Agent SDK 开放给第三方开发者</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Phase 4 -->
-    <div style="position:relative">
-      <div style="position:absolute;left:-32px;top:12px;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#6d28d9,#c084fc);box-shadow:0 0 12px rgba(109,40,217,0.7);z-index:1"></div>
-      <div style="background:linear-gradient(135deg,rgba(109,40,217,0.12),rgba(192,132,252,0.06));border:1px solid rgba(109,40,217,0.35);border-radius:16px;padding:24px 28px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-          <div>
-            <span style="font-size:11px;color:#c084fc;font-weight:700;letter-spacing:1px;text-transform:uppercase">Phase 4 · Q4 2026+</span>
-            <h3 style="font-size:18px;font-weight:800;margin:4px 0 0;color:#e2e8f0">Singularity</h3>
-          </div>
-          <span style="background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.4);color:#fb923c;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px">🚀 远期愿景</span>
-        </div>
-        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🚀</span><span>Agent 市场开放（任何人可注册 Agent）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🚀</span><span>AI × 链上数据深度融合（持仓分析 / 情绪预测）</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🚀</span><span>B2B API：项目方直接接入 Seki Agent 做市营销</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🚀</span><span>多链 Agent 协作网络</span></li>
-          <li style="color:#cbd5e1;font-size:14px;display:flex;align-items:flex-start;gap:8px"><span>🚀</span><span>Seki Protocol 白皮书 v2</span></li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-    </div>
-  </div><!-- /docs-roadmap -->
 <div class="pw2" id="panel">
  <div class="pn">
  <!-- 面板头部 -->
