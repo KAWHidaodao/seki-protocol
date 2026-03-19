@@ -2561,5 +2561,23 @@ id="page-wendang" class="pw" style="display:none">
 <script src="/js/events.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/effects.js"></script>
+
+<script>
+// Override docTab - defined last to win over all JS files
+window.docTab = function(tab, el) {
+  ['docs-logic','docs-contract','docs-dev','docs-roadmap'].forEach(function(id){
+    var d = document.getElementById(id);
+    if(d) d.style.display = (id === 'docs-'+tab) ? '' : 'none';
+  });
+  document.querySelectorAll('[id^="dtag-"]').forEach(function(b){
+    b.style.background = 'transparent';
+    b.style.color = 'var(--tx2)';
+    b.style.border = '1px solid rgba(255,255,255,.15)';
+  });
+  if(el){ el.style.background='rgba(124,58,237,.15)'; el.style.color='var(--p)'; el.style.border='1px solid var(--p)'; }
+  if(tab==='logic' && typeof loadLogicSentiment==='function') loadLogicSentiment();
+};
+function docTab(tab,el){ window.docTab(tab,el); }
+</script>
 </body>
 </html>
