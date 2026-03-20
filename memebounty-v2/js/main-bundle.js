@@ -2438,8 +2438,7 @@ function G(id,el){
   try{if(id==='delegate')loadDelegations();}catch(e){}
   try{if(id==='hot')loadHotPage();}catch(e){}
   try{if(id==='docs'){docTab('logic',document.getElementById('dtag-logic'));loadOnchainDecisions();}}catch(e){}
-  try{if(id==='apps'){const acl=document.getElementById('apps-chain-label');if(acl)acl.textContent=currentChain?currentChain.name:'Monad';}}catch(e){}
-  try{if(id==='home')loadTasks();}catch(e){}
+  try{if(id==='apps'){const acl=document.getElementById('apps-chain-label');if(acl)acl.textContent=currentChain?currentChain.name:'BSC';}}catch(e){}
  },0);
 }
 
