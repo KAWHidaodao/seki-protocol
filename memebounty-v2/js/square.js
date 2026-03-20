@@ -666,12 +666,7 @@ async function loadOnchainDecisions() {
         const tagColor = {CREATE:'#34d399',WAIT:'#6b7280',CANCEL:'#f87171',INFO:'#60a5fa'}[tag]||'#6b7280';
         const ts = l.ts ? new Date(l.ts).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}) : '';
         const txLink = l.txHash ? ` <a href="https://bscscan.com/tx/${l.txHash}" target="_blank" style="color:var(--p);font-size:10px">链上 ↗</a>` : '';
-        return `<div style="display:flex;align-items:baseline;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-          <span style="font-size:9px;font-weight:700;letter-spacing:.5px;color:${tagColor};min-width:44px">${tag}</span>
-          <span style="color:var(--tx3);font-size:10px;white-space:nowrap">${ts}</span>
-          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(l.msg||'')}</span>
-          ${txLink}
-        </div>`;
+        return ``;
       }).join('');
     }
   } catch(e) { console.warn('loadOnchainDecisions:', e.message); }
