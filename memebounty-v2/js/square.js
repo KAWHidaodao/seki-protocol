@@ -1,54 +1,39 @@
 function loadTasks() {
   var el = document.getElementById('task-list');
   if (!el) return;
-
-  var MOCK_TASKS = [
-    {id:1,symbol:'PEPE',name:'Pepe',type:0,reward:'0.15',creator:'0xabc1...def',deadline:Math.floor(Date.now()/1000)+86400*7,claimedCount:23,maxClaims:100,active:true,desc:'持有 ≥1M PEPE 代币，快照验证',onchain:false},
-    {id:2,symbol:'DOGE',name:'Dogecoin',type:1,reward:'0.25',creator:'0xabc2...def',deadline:Math.floor(Date.now()/1000)+86400*5,claimedCount:45,maxClaims:200,active:true,desc:'与 DOGE/BNB LP 合约交互一次',onchain:false},
-    {id:3,symbol:'SHIB',name:'Shiba Inu',type:2,reward:'0.30',creator:'0xabc3...def',deadline:Math.floor(Date.now()/1000)+86400*3,claimedCount:12,maxClaims:50,active:true,desc:'为 SHIB/USDT 提供流动性 ≥$50',onchain:false},
-    {id:4,symbol:'FLOKI',name:'Floki Inu',type:0,reward:'0.10',creator:'0xabc4...def',deadline:Math.floor(Date.now()/1000)+86400*10,claimedCount:67,maxClaims:500,active:true,desc:'持有 ≥500K FLOKI，链上验证',onchain:false},
-    {id:5,symbol:'BONK',name:'Bonk',type:1,reward:'0.20',creator:'0xabc5...def',deadline:Math.floor(Date.now()/1000)+86400*4,claimedCount:8,maxClaims:80,active:true,desc:'Bonk Swap 完成一笔交易',onchain:false},
-    {id:6,symbol:'WIF',name:'dogwifhat',type:0,reward:'0.35',creator:'0xabc6...def',deadline:Math.floor(Date.now()/1000)+86400*6,claimedCount:31,maxClaims:150,active:true,desc:'持有 ≥100 WIF 并保持 72h',onchain:false},
-    {id:7,symbol:'MEME',name:'Memecoin',type:2,reward:'0.18',creator:'0xabc7...def',deadline:Math.floor(Date.now()/1000)+86400*8,claimedCount:5,maxClaims:30,active:true,desc:'MEME/BNB LP 添加流动性 ≥$30',onchain:false},
-    {id:8,symbol:'TURBO',name:'Turbo',type:1,reward:'0.12',creator:'0xabc8...def',deadline:Math.floor(Date.now()/1000)+86400*2,claimedCount:92,maxClaims:300,active:true,desc:'在 PancakeSwap 兑换 ≥0.01BNB 的 TURBO',onchain:false}
-  ];
-
-  var ONCHAIN_TASKS = [
-    {id:101,symbol:'CAKE',name:'PancakeSwap',type:1,reward:'0.50',creator:'0xSekiAgent001',deadline:Math.floor(Date.now()/1000)+86400*14,claimedCount:156,maxClaims:1000,active:true,desc:'🔗 链上任务 · PancakeSwap V3 交互一次，Gas 补贴',onchain:true},
-    {id:102,symbol:'BNB',name:'BNB Chain',type:0,reward:'0.80',creator:'0xSekiAgent002',deadline:Math.floor(Date.now()/1000)+86400*30,claimedCount:2341,maxClaims:10000,active:true,desc:'🔗 链上任务 · 持有 ≥0.1 BNB 并完成3笔链上交易',onchain:true},
-    {id:103,symbol:'BUSD',name:'Binance USD',type:2,reward:'1.20',creator:'0xSekiAgent003',deadline:Math.floor(Date.now()/1000)+86400*21,claimedCount:89,maxClaims:500,active:true,desc:'🔗 链上任务 · 为 BUSD/USDT 稳定币池提供 ≥$100 流动性',onchain:true}
-  ];
-
-  var types = ['持仓','交互','流动性'];
-  var colors = ['#34d399','#60a5fa','#f472b6'];
-  var all = ONCHAIN_TASKS.concat(MOCK_TASKS);
-  var html = '';
-  all.forEach(function(t) {
-    var pct = Math.round(t.claimedCount / t.maxClaims * 100);
-    var remain = Math.max(0, Math.ceil((t.deadline - Date.now()/1000) / 86400));
-    var badge = t.onchain ? '<span style="background:#f59e0b;color:#000;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:6px">ON-CHAIN</span>' : '';
-    html += '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-bottom:12px;transition:border-color .2s" onmouseenter="this.style.borderColor=\'rgba(196,181,253,.3)\'" onmouseleave="this.style.borderColor=\'rgba(255,255,255,.06)\'">';
-    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">';
-    html += '<div style="display:flex;align-items:center;gap:10px">';
-    html += '<div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,' + colors[t.type] + '33,' + colors[t.type] + '11);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:' + colors[t.type] + '">' + t.symbol.charAt(0) + '</div>';
-    html += '<div><div style="font-size:15px;font-weight:700;color:var(--tx)">' + t.symbol + badge + '</div>';
-    html += '<div style="font-size:11px;color:var(--tx3)">' + t.name + '</div></div></div>';
-    html += '<span style="font-size:10px;padding:3px 10px;border-radius:20px;background:' + colors[t.type] + '22;color:' + colors[t.type] + ';font-weight:600">' + types[t.type] + '</span>';
-    html += '</div>';
-    html += '<p style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:14px">' + t.desc + '</p>';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
-    html += '<span style="font-size:13px;font-weight:700;color:#c4b5fd">' + t.reward + ' BNB</span>';
-    html += '<span style="font-size:11px;color:var(--tx3)">' + remain + ' 天剩余</span></div>';
-    html += '<div style="background:rgba(255,255,255,.06);border-radius:6px;height:6px;overflow:hidden;margin-bottom:8px">';
-    html += '<div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#c4b5fd,#a78bfa);border-radius:6px;transition:width .5s"></div></div>';
-    html += '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tx3)">';
-    html += '<span>' + t.claimedCount + ' / ' + t.maxClaims + ' 已完成</span>';
-    html += '<span>' + pct + '%</span></div></div>';
-  });
-
-  el.innerHTML = html;
-  var cnt = document.getElementById('hall-count');
-  if (cnt) cnt.textContent = all.length + ' 个任务';
+  fetch('/api/tasks/mock')
+    .then(function(r){return r.json();})
+    .then(function(all){
+      var types = ['持仓','交互','流动性'];
+      var colors = ['#34d399','#60a5fa','#f472b6'];
+      var html = '';
+      all.forEach(function(t) {
+        var pct = Math.round(t.claimedCount / t.maxClaims * 100);
+        var remain = Math.max(0, Math.ceil((t.deadline - Date.now()/1000) / 86400));
+        var badge = t.onchain ? '<span style="background:#f59e0b;color:#000;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:6px">ON-CHAIN</span>' : '';
+        html += '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-bottom:12px;transition:border-color .2s" onmouseenter="this.style.borderColor=\'rgba(196,181,253,.3)\'" onmouseleave="this.style.borderColor=\'rgba(255,255,255,.06)\'">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">';
+        html += '<div style="display:flex;align-items:center;gap:10px">';
+        html += '<div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,' + colors[t.type] + '33,' + colors[t.type] + '11);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:' + colors[t.type] + '">' + t.symbol.charAt(0) + '</div>';
+        html += '<div><div style="font-size:15px;font-weight:700;color:var(--tx)">' + t.symbol + badge + '</div>';
+        html += '<div style="font-size:11px;color:var(--tx3)">' + t.name + '</div></div></div>';
+        html += '<span style="font-size:10px;padding:3px 10px;border-radius:20px;background:' + colors[t.type] + '22;color:' + colors[t.type] + ';font-weight:600">' + types[t.type] + '</span>';
+        html += '</div>';
+        html += '<p style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:14px">' + t.desc + '</p>';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+        html += '<span style="font-size:13px;font-weight:700;color:#c4b5fd">' + t.reward + ' BNB</span>';
+        html += '<span style="font-size:11px;color:var(--tx3)">' + remain + ' 天剩余</span></div>';
+        html += '<div style="background:rgba(255,255,255,.06);border-radius:6px;height:6px;overflow:hidden;margin-bottom:8px">';
+        html += '<div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#c4b5fd,#a78bfa);border-radius:6px;transition:width .5s"></div></div>';
+        html += '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--tx3)">';
+        html += '<span>' + t.claimedCount + ' / ' + t.maxClaims + ' 已完成</span>';
+        html += '<span>' + pct + '%</span></div></div>';
+      });
+      el.innerHTML = html;
+      var cnt = document.getElementById('hall-count');
+      if (cnt) cnt.textContent = all.length + ' 个任务';
+    })
+    .catch(function(e){ console.error('loadTasks:', e); });
 }function loadDelegations(){
  const list=JSON.parse(localStorage.getItem('mb_delegations')||'[]');
  const el=document.getElementById('dlist');
