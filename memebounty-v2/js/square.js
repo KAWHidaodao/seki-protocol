@@ -833,3 +833,5 @@ async function loadLog(){
 setInterval(loadLog,30000);
 
 // 从 BSCScan 同步历史发币记录
+
+document.addEventListener('DOMContentLoaded',function(){try{loadTasks();}catch(e){}});
